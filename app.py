@@ -68,213 +68,221 @@ st.set_page_config(
     page_title="مركز النمذجة والمحاكاة - جامعة آل البيت",
     layout="wide",
     initial_sidebar_state="expanded",
-    page_icon="⚙️" 
+    page_icon="⚙️" # أيقونة عامة تعبر عن الهندسة والتقنية
 )
 
-# 💎 تصميم CSS الفاخر (Dark Tech UI)
+# 🎨 تصميم CSS جديد كلياً
 st.markdown("""
 <style>
     /* دعم الاتجاه من اليمين لليسار بشكل كامل */
     .stApp {
         direction: rtl;
         text-align: right;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* خط احترافي */
     }
     
-    /* الألوان الأساسية - سمة داكنة (Dark Tech UI) */
+    /* الألوان الأساسية - لوحة ألوان هندسية احترافية */
     :root {
-        --primary-dark: #121212;       /* خلفية أساسية داكنة جداً */
-        --secondary-dark: #1F1F1F;     /* خلفية ثانوية (مثل البطاقات) */
-        --primary-blue: #0077CC;       /* أزرق تقني كلاسيكي */
-        --accent-gold: #B8860B;        /* ذهبي/نحاسي للمسات الفاخرة */
-        --text-light: #E0E0E0;         /* لون النص الفاتح */
-        --text-muted: #A0A0A0;         /* لون النص الثانوي */
-        --border-color: #333333;       /* لون الحدود الداكن */
-        --glass-bg: rgba(31, 31, 31, 0.9); /* خلفية زجاجية شفافة للشريط الجانبي */
-    }
-
-    body {
-        background-color: var(--primary-dark);
-        color: var(--text-light);
-    }
-    
-    /* تطبيق الخلفية الداكنة على العناصر الرئيسية */
-    .stApp, [data-testid="stHeader"] {
-        background-color: var(--primary-dark) !important;
-        color: var(--text-light) !important;
+        --primary-blue: #004D80;     /* أزرق داكن للمكونات الرئيسية */
+        --secondary-grey: #4A4A4A;   /* رمادي داكن للنصوص */
+        --accent-lime: #8BC34A;      /* أخضر زيزفوني للمسات البارزة */
+        --light-blue: #ADD8E6;      /* أزرق فاتح للخلفيات */
+        --background-light: #F8F9FA; /* خلفية فاتحة جداً */
+        --sidebar-bg: #E3F2FD;       /* أزرق فاتح جداً للشريط الجانبي */
+        --sidebar-text: #004D80;     /* نص الشريط الجانبي أزرق داكن */
+        --card-bg: #FFFFFF;          /* خلفية البطاقات بيضاء */
+        --border-color: #E0E0E0;     /* لون الحدود الخفيف */
     }
 
     /* العناوين والتأكيد */
     h1, h2, h3, h4 {
-        color: var(--accent-gold); /* العناوين باللون الذهبي */
-        border-bottom: 1px solid var(--border-color);
+        color: var(--primary-blue);
+        border-bottom: 2px solid var(--light-blue);
         padding-bottom: 10px;
         margin-top: 30px;
-        font-weight: 700; 
+        font-weight: 700; /* خط سميك */
     }
-    h1 { font-size: 2.5em; color: var(--text-light); } /* العنوان الرئيسي بخط فاتح */
+    h1 { font-size: 2.5em; }
     h2 { font-size: 2em; }
     h3 { font-size: 1.7em; }
 
-    /* الشريط الجانبي (تأثير Glassmorphism) */
+    /* الشريط الجانبي - تصميم أنيق وحديث */
     [data-testid="stSidebar"] {
-        background-color: var(--glass-bg);
-        backdrop-filter: blur(10px); /* تأثير التعتيم الزجاجي */
-        border-right: 1px solid var(--border-color);
-        box-shadow: 2px 0 20px rgba(0, 0, 0, 0.5); 
+        background-color: var(--sidebar-bg);
+        color: var(--sidebar-text);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05); /* ظل خفيف */
         min-width: 300px !important;
         max-width: 300px !important;
     }
-    .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2 { 
+    .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2 { /* لروابط القائمة الجانبية */
         font-size: 1.15em;
         font-weight: 600;
-        color: var(--text-light);
+        color: var(--sidebar-text);
         padding: 12px 15px;
         border-radius: 8px;
-        transition: background-color 0.2s ease, border 0.2s ease;
-        border-left: 3px solid transparent; /* خط فاخر على اليسار */
+        transition: background-color 0.2s ease;
     }
     .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2:hover {
-        background-color: rgba(0, 119, 204, 0.1); 
-        border-left: 3px solid var(--primary-blue);
-        color: var(--primary-blue);
+        background-color: rgba(0, 77, 128, 0.1); /* ظل أزرق خفيف عند التحويم */
     }
     .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2[aria-selected="true"] {
-        background-color: var(--accent-gold); /* تغيير الخلفية للذهبي عند الاختيار */
-        color: var(--primary-dark);
-        border-left: 3px solid var(--primary-dark); /* العنصر المختار بلون داكن */
-        box-shadow: none;
+        background-color: var(--primary-blue); /* خلفية زرقاء داكنة للعنصر المختار */
+        color: white;
+        box-shadow: 0 2px 8px rgba(0, 77, 128, 0.2);
     }
 
-    /* الأزرار (Primary Action) - تأثير معدني */
+    /* الأزرار (Primary Action) */
     .stButton>button {
-        background: linear-gradient(145deg, var(--primary-blue), #004D80);
+        background-color: var(--primary-blue);
         color: white;
-        border: 1px solid var(--accent-gold);
+        border: none;
         border-radius: 8px;
         padding: 12px 25px;
-        font-weight: 700;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
         font-size: 1.0em;
         margin-top: 10px;
     }
     .stButton>button:hover {
-        background: linear-gradient(145deg, var(--accent-gold), #A0780A); /* يتغير للذهبي عند التحويم */
-        color: var(--primary-dark);
-        transform: scale(1.02);
+        background-color: var(--accent-lime); /* يتغير للأخضر الزيزفوني عند التحويم */
+        color: var(--secondary-grey);
+        transform: translateY(-2px); /* تأثير ارتفاع بسيط */
     }
     
-    /* بطاقات الإحصائيات (Metrics) - تصميم ثلاثي الأبعاد */
+    /* بطاقات الإحصائيات (Metrics) - تصميم جديد */
     [data-testid="stMetric"] {
-        background-color: var(--secondary-dark);
+        background-color: var(--card-bg);
         border: 1px solid var(--border-color);
         border-radius: 12px;
         padding: 25px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         text-align: center;
-        transition: transform 0.3s ease;
-        border-bottom: 3px solid var(--primary-blue); /* شريط أزرق سفلي */
+        transition: transform 0.2s ease;
     }
     [data-testid="stMetric"]:hover {
-        transform: translateY(-5px); 
-        border-bottom: 3px solid var(--accent-gold); /* يتحول للذهبي عند التحويم */
+        transform: translateY(-5px); /* تأثير ارتفاع عند التحويم */
     }
     [data-testid="stMetricValue"] {
-        font-size: 3.5em; 
-        color: var(--accent-gold); /* القيمة باللون الذهبي */
+        font-size: 3.5em; /* حجم أكبر للقيمة */
+        color: var(--primary-blue);
         font-weight: bolder;
         margin-bottom: 5px;
     }
     [data-testid="stMetricLabel"] {
         font-size: 1.1em;
-        color: var(--text-light);
+        color: var(--secondary-grey);
         font-weight: 500;
     }
     [data-testid="stMetricDelta"] {
         font-size: 0.9em;
         font-weight: bold;
-        color: var(--primary-blue);
+        color: var(--accent-lime); /* لون الدلتا بالأخضر */
     }
 
-    /* تنسيق خاص للشعارين */
+    /* تنسيق خاص للشعارين باستخدام HTML */
     .logo-container {
         text-align: center;
         margin-bottom: 25px;
         padding-top: 10px;
     }
     .logo-image-sidebar {
-        width: 130px; 
-        filter: drop-shadow(0 0 5px rgba(0, 119, 204, 0.5)); /* ظل خفيف تقني */
-        border-radius: 8px;
+        width: 130px; /* حجم أكبر للشعار في الشريط الجانبي */
+        height: auto;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+        border-radius: 8px; /* حواف دائرية بسيطة */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     .logo-image-main {
-        width: 250px;
-        filter: drop-shadow(0 0 10px rgba(0, 119, 204, 0.7));
+        width: 250px; /* حجم أكبر للشعار الرئيسي */
+        height: auto;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
         border-radius: 12px;
-        margin-bottom: 40px; 
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        margin-bottom: 40px; /* تباعد أكبر */
     }
-    
-    /* تحسين تصميم النماذج والحقول والجداول */
+
+    /* تحسين تصميم النماذج والحقول */
     .st-emotion-cache-czk5ad { /* Container for forms/expander content */
-        background-color: var(--secondary-dark);
+        background-color: var(--background-light);
         border-radius: 10px;
         padding: 20px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         margin-bottom: 20px;
         border: 1px solid var(--border-color);
     }
-    .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea>div>div>textarea {
+    .stTextInput>div>div>input, .stSelectbox>div>div>div {
         border-radius: 8px;
-        border: 1px solid var(--primary-blue);
-        background-color: var(--primary-dark);
-        color: var(--text-light);
+        border: 1px solid var(--border-color);
         padding: 10px;
     }
-    .st-emotion-cache-1ftrzg7 p { 
-        font-weight: 700;
-        color: var(--accent-gold);
-        font-size: 1.1em;
-    }
-
-    /* تنسيق الجداول */
-    .st-emotion-cache-1ftrzg7 .stDataFrame {
+    .stTextArea>div>div>textarea {
+        border-radius: 8px;
         border: 1px solid var(--border-color);
-        border-radius: 10px;
+        padding: 10px;
     }
     
+    /* تصميم الـ Expander */
+    .st-emotion-cache-1ftrzg7 p { /* Expander header text */
+        font-weight: 600;
+        color: var(--primary-blue);
+        font-size: 1.1em;
+    }
+    .st-emotion-cache-l350x7 { /* Expander button */
+        border-radius: 8px;
+        background-color: var(--sidebar-bg);
+        border: 1px solid var(--light-blue);
+    }
+
+    /* Info, Success, Warning, Error messages */
+    .stAlert {
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 15px 20px;
+    }
+    .stAlert.success { background-color: #E6F7D9; border-left: 5px solid #8BC34A; }
+    .stAlert.info { background-color: #EBF5FB; border-left: 5px solid #007bff; }
+    .stAlert.warning { background-color: #FFF3CD; border-left: 5px solid #FFC107; }
+    .stAlert.error { background-color: #F8D7DA; border-left: 5px solid #DC3545; }
+
     /* Tabs styling */
     .stTabs [data-testid="stTabItem"] {
-        background-color: var(--secondary-dark);
-        color: var(--text-light);
+        background-color: var(--background-light);
+        color: var(--secondary-grey);
         border-radius: 8px 8px 0 0;
         padding: 10px 20px;
         font-weight: 600;
         border: 1px solid var(--border-color);
         border-bottom: none;
-        margin-left: 5px; 
+        margin-left: 5px; /* تباعد بين علامات التبويب */
     }
     .stTabs [data-testid="stTabItem"][data-selected="true"] {
-        background-color: var(--accent-gold);
-        color: var(--primary-dark);
-        border-color: var(--accent-gold);
+        background-color: var(--primary-blue);
+        color: white;
+        border-color: var(--primary-blue);
         border-bottom: none;
-        box-shadow: 0 -2px 10px rgba(184, 134, 11, 0.5); /* ظل ذهبي خفيف */
     }
-    
-    /* رسائل التنبيهات */
-    .stAlert {
+    .stTabs [data-testid="stVerticalTabs"] {
+        background-color: var(--background-light);
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+    }
+    .stTabs [data-testid="stVerticalTabItem"] {
+        background-color: var(--background-light);
+        color: var(--secondary-grey);
         border-radius: 8px;
+        padding: 10px 15px;
+        margin-bottom: 5px;
         font-weight: 500;
-        padding: 15px 20px;
-        background-color: var(--secondary-dark);
-        color: var(--text-light);
     }
-    .stAlert.success { border-left: 5px solid #00CC99; }
-    .stAlert.info { border-left: 5px solid var(--primary-blue); }
-    .stAlert.warning { border-left: 5px solid var(--accent-gold); }
-    .stAlert.error { border-left: 5px solid #DC3545; }
-
+    .stTabs [data-testid="stVerticalTabItem"][data-selected="true"] {
+        background-color: var(--primary-blue);
+        color: white;
+    }
 
 </style>
 """, unsafe_allow_html=True)
@@ -292,54 +300,27 @@ if st.session_state['logged_in']:
     # --- القائمة الجانبية للتنقل (تظهر فقط بعد الدخول) ---
     st.sidebar.markdown(f"""
     <div class="logo-container">
-        <img src="download-removebg-preview (1).png" class="logo-image-sidebar">
+        <img src="aabu_logo.png" class="logo-image-sidebar">
     </div>
     """, unsafe_allow_html=True)
     
-    st.sidebar.markdown("## ⚙️ نظام الإدارة")
-    st.sidebar.markdown("### شعبة التدريب المتقدم")
+    st.sidebar.markdown("## ⚙️ نظام إدارة المركز")
+    st.sidebar.markdown("### شعبة التدريب والتطوير")
     st.sidebar.markdown("---")
     
-    # 🚀 القائمة الجانبية مع أيقونات Font Awesome الفاخرة 🚀 (تم استبدال الأسماء بالإيموجي لتجنب الخطأ)
+    # تحديد القائمة (مع أيقونات جديدة)
     menu = st.sidebar.radio(
         "القائمة الرئيسية:",
         (
-            "لوحة التحكم",
-            "إدارة الدورات",
-            "إدارة المدربين",
-            "التقارير والإحصائيات",
-            "التدقيق والمتابعة", 
-            "أدوات الإدارة المتقدمة"
+            "🏠 لوحة التحكم",
+            "📚 إدارة الدورات",
+            "🧑‍🏫 إدارة المدربين",
+            "📊 التقارير والإحصائيات",
+            "🔍 التدقيق والمتابعة", # تم تغيير الترتيب ليتناسب مع الأهمية
+            "🔑 أدوات الإدارة المتقدمة"
         ),
-        # استخدام الإيموجي المناسبة للمظهر الاحترافي
-        icons=[
-            "🖥️",           # لوحة التحكم - تقني
-            "📖",          # إدارة الدورات - كتاب
-            "👨‍🏫",          # إدارة المدربين - مدرب
-            "📈",    # التقارير - رسم بياني
-            "🔎",  # التدقيق - بحث وفحص
-            "🔒"       # الأدوات المتقدمة - قفل/أمان
-        ]
+        icons=["house", "book", "person-badge", "bar-chart", "search", "key"] # أيقونات Bootstrap
     )
-    
-    # 🔥 تنسيق CSS إضافي لتلوين الأيقونات باللون الذهبي 🔥
-    st.sidebar.markdown("""
-    <style>
-        /* تلوين الأيقونات في القائمة الجانبية باللون الذهبي */
-        .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2 svg {
-            fill: #B8860B; /* ذهبي/نحاسي */
-            margin-right: 15px;
-            width: 1.2em; /* حجم أكبر */
-            height: 1.2em;
-            transition: fill 0.2s ease;
-        }
-        /* تلوين الأيقونة المختارة باللون الداكن لتمييزها على الخلفية الذهبية */
-        .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2[aria-selected="true"] svg {
-            fill: var(--primary-dark); 
-        }
-    </style>
-    """, unsafe_allow_html=True)
-
     st.sidebar.markdown("---")
     st.sidebar.button("🔐 تسجيل الخروج", on_click=logout_user)
 
@@ -347,10 +328,10 @@ if st.session_state['logged_in']:
     # ==========================================
     # 1. لوحة التحكم (الصفحة الرئيسية الجديدة)
     # ==========================================
-    if menu == "لوحة التحكم":
+    if menu == "🏠 لوحة التحكم":
         st.markdown(f"""
         <div class="logo-container">
-            <img src="logo.jpg" class="logo-image-main">
+            <img src="simulation_logo.jpg" class="logo-image-main">
         </div>
         """, unsafe_allow_html=True)
         
@@ -381,8 +362,7 @@ if st.session_state['logged_in']:
             college_counts = df_trainees['College'].value_counts()
             
             with chart_col:
-                # استخدام ألوان تناسب السمة الداكنة (ذهبي وأزرق)
-                st.bar_chart(college_counts, color=["#B8860B"]) 
+                st.bar_chart(college_counts, color="#007bff") 
             
             with data_col:
                 with st.expander("جدول البيانات التفصيلي"):
@@ -403,7 +383,7 @@ if st.session_state['logged_in']:
     # ==========================================
     # 2. قسم إدارة الدورات (تم إضافة تفقد المسجلين)
     # ==========================================
-    elif menu == "إدارة الدورات":
+    elif menu == "📚 إدارة الدورات":
         st.header("📝 إدارة الدورات التدريبية")
         st.markdown("هذا القسم مخصص لإضافة وحذف الدورات المتاحة والتعديل على حالة التسجيل و **عرض قائمة المسجلين**.")
         
@@ -488,25 +468,24 @@ if st.session_state['logged_in']:
                         st.session_state['courses'][new_id] = {"Name": new_name, "Status": new_status, "Trainer_ID": trainer_id_to_assign}
                         
                         # تحديث بيانات المدرب ليظهر أنه مرتبط بهذه الدورة
-                        if trainer_id_to_assign and trainer_id_to_assign != None:
+                        if trainer_id_to_assign:
                             st.session_state['trainers'][trainer_id_to_assign]['Assigned_Course_ID'] = new_id
                         
                         st.success(f"✅ تمت إضافة الدورة **{new_name}** بالمعرف #{new_id}. المدرب: **{selected_trainer_name}**")
                     else:
                         st.error("الرجاء إدخال اسم الدورة.")
         
-        # تعديل دورة
+        # تعديل دورة (للاختصار، نكتفي بالعرض هنا) 
         with col_c2.expander("✍️ تعديل بيانات دورة"):
             if course_ids:
                 course_to_update = st.selectbox("اختر الدورة للتعديل", options=course_ids, format_func=lambda x: f"#{x} - {st.session_state['courses'][x]['Name']}", key="update_c_select")
-                current_data = st.session_state['courses'][course_to_update]
-                current_name = current_data['Name']
-                current_status = current_data['Status']
-                current_trainer_id = current_data.get('Trainer_ID')
+                current_name = st.session_state['courses'][course_to_update]['Name']
+                current_status = st.session_state['courses'][course_to_update]['Status']
+                current_trainer_id = st.session_state['courses'][course_to_update].get('Trainer_ID')
 
                 trainer_list = {k: v['Name'] for k, v in st.session_state['trainers'].items()}
-                trainer_options_names = list(trainer_list.values())
-                trainer_options_names.append('غير مسند')
+                trainer_options = {name: id for id, name in trainer_list.items()}
+                trainer_options['غير مسند'] = None
                 
                 # لتحديد القيمة الافتراضية للمدرب في Selectbox
                 default_trainer_name = "غير مسند"
@@ -516,12 +495,11 @@ if st.session_state['logged_in']:
                 with st.form("update_course_admin_form"):
                     updated_name = st.text_input("الاسم الجديد للدورة", value=current_name)
                     updated_status = st.selectbox("الحالة الجديدة", ["متاحة للتسجيل", "قيد الإعداد", "مكتملة"], index=["متاحة للتسجيل", "قيد الإعداد", "مكتملة"].index(current_status))
-                    updated_trainer_name = st.selectbox("إسناد مدرب للدورة", options=trainer_options_names, index=trainer_options_names.index(default_trainer_name))
+                    updated_trainer_name = st.selectbox("إسناد مدرب للدورة", options=list(trainer_options.keys()), index=list(trainer_options.keys()).index(default_trainer_name))
                     
                     if st.form_submit_button("حفظ التعديلات"):
-                        # إيجاد الـ ID للمدرب الجديد من اسمه
-                        updated_trainer_id = next((k for k, v in trainer_list.items() if v == updated_trainer_name), None)
-
+                        updated_trainer_id = trainer_options[updated_trainer_name]
+                        
                         # إلغاء إسناد المدرب القديم إذا تغير
                         if current_trainer_id and current_trainer_id != updated_trainer_id and current_trainer_id in st.session_state['trainers']:
                             st.session_state['trainers'][current_trainer_id]['Assigned_Course_ID'] = None
@@ -561,7 +539,7 @@ if st.session_state['logged_in']:
     # ==========================================
     # 3. قسم إدارة المدربين (القسم الجديد) 🧑‍🏫
     # ==========================================
-    elif menu == "إدارة المدربين":
+    elif menu == "🧑‍🏫 إدارة المدربين":
         st.header("🧑‍🏫 إدارة ومتابعة المدربين")
         st.markdown("هذا القسم يعرض تفاصيل المدربين، الدورات المسندة إليهم، وقائمة المسجلين في كل دورة.")
 
@@ -582,318 +560,13 @@ if st.session_state['logged_in']:
             
             st.subheader("تفقد قائمة المسجلين لكل مدرب")
             
-            # استخدام الأقواس المعقوفة {} لإنشاء قاموس (Dict Comprehension)
-            trainer_options_keys = {f"#{id} - {data['Name']} ({data['Specialty']})": id for id, data in st.session_state['trainers'].items()}
+            trainer_options = {f"#{id} - {data['Name']} ({data['Specialty']})": id for id, data in st.session_state['trainers'].items()}
+            selected_trainer_key = st.selectbox("اختر المدرب لعرض تفاصيل دوره:", options=list(trainer_options.keys()), key="select_trainer_for_view")
             
-            if trainer_options_keys:
-                selected_trainer_key_name = st.selectbox("اختر المدرب لعرض تفاصيل دوره:", options=list(trainer_options_keys.keys()), key="select_trainer_for_view")
-                
-                trainer_id = trainer_options_keys[selected_trainer_key_name]
-                assigned_course_id = st.session_state['trainers'][trainer_id]['Assigned_Course_ID']
-                trainer_name = st.session_state['trainers'][trainer_id]['Name']
-                
-                if assigned_course_id is not None:
-                    course_name = st.session_state['courses'][assigned_course_id]['Name']
-                    st.success(f"المدرب **{trainer_name}** مسند لدورة: **{course_name}** (ID: {assigned_course_id})")
-
-                    # عرض تفاصيل المسجلين في دورة المدرب
-                    if st.session_state['trainees']:
-                        df_trainees_trainer = pd.DataFrame(st.session_state['trainees']).T
-                        df_trainees_trainer = df_trainees_trainer[df_trainees_trainer['Course_ID'] == assigned_course_id]
-                        
-                        if not df_trainees_trainer.empty:
-                            df_trainees_trainer['Trainee_ID'] = df_trainees_trainer.index
-                            st.info(f"عدد المسجلين في دورة **{course_name}**: {len(df_trainees_trainer)} متدرب.")
-                            
-                            st.dataframe(
-                                df_trainees_trainer[['Trainee_ID', 'Name', 'College', 'Type', 'Date']],
-                                use_container_width=True, 
-                                hide_index=True
-                            )
-                        else:
-                            st.warning(f"لا يوجد متدربون مسجلون حالياً في دورة المدرب **{course_name}**.")
-                    else:
-                        st.info("لا يوجد متدربون في النظام بعد.")
-                        
-                else:
-                    st.warning(f"المدرب **{trainer_name}** غير مسند لأي دورة حالياً.")
-        
-        else:
-            st.info("لا يوجد مدربون مضافون في النظام.")
-        
-    # ==========================================
-    # 4. قسم التدقيق والمتابعة
-    # ==========================================
-    elif menu == "التدقيق والمتابعة":
-        st.header("🔍 التدقيق اليومي للمرافق والبرامج")
-        st.markdown("املأ هذا النموذج لرفع تقارير التدقيق الدورية.")
-        
-        with st.form("audit_form", clear_on_submit=True):
-            col1, col2 = st.columns(2)
-            with col1:
-                lab_id = st.selectbox("المرفق / المختبر", ["مختبر النمذجة", "مختبر المحاكاة", "قاعة التدريب 1", "قاعة التدريب 2", "أخرى"], key="audit_lab")
-                auditor = st.text_input("اسم المدقق المسؤول", key="audit_auditor")
+            trainer_id = trainer_options[selected_trainer_key]
+            assigned_course_id = st.session_state['trainers'][trainer_id]['Assigned_Course_ID']
+            trainer_name = st.session_state['trainers'][trainer_id]['Name']
             
-            st.markdown("---")
-            st.markdown("**قائمة التحقق لضمان الجودة:**")
-            
-            check_col1, check_col2, check_col3 = st.columns(3)
-            check_sw = check_col1.checkbox("البرمجيات تعمل بكفاءة (الرخص سارية)", help="تأكد من عمل جميع البرامج والرخص.")
-            check_hw = check_col2.checkbox("الأجهزة والمعدات سليمة (تكييف/كهرباء/شبكة)", help="فحص الأجهزة العامة والفرعية.")
-            check_cl = check_col3.checkbox("نظافة القاعة والترتيب العام", help="تأكد من النظافة والترتيب بعد الاستخدام.")
-            
-            notes = st.text_area("ملاحظات تفصيلية أو طلبات صيانة عاجلة", key="audit_notes")
-            
-            submit_audit = st.form_submit_button("✅ رفع تقرير التدقيق")
-            
-            if submit_audit and auditor:
-                new_id = get_next_id(st.session_state['audit_logs'])
-                status_text = "ممتاز" if (check_sw and check_hw and check_cl) else "⚠️ يحتاج متابعة فورية"
-                audit_entry = {
-                    "Lab": lab_id,
-                    "Auditor": auditor,
-                    "Time": datetime.now().strftime("%Y-%m-%d %H:%M"),
-                    "Status": status_text,
-                    "Notes": notes
-                }
-                st.session_state['audit_logs'][new_id] = audit_entry
-                if status_text == "ممتاز":
-                    st.success("👍 تم حفظ التقرير بنجاح. المرافق بحالة ممتازة.")
-                else:
-                    st.error(f"🚨 تم تسجيل التقرير. حالة المرفق **{status_text}**.")
-            elif submit_audit and not auditor:
-                st.warning("الرجاء إدخال اسم المدقق المسؤول.")
-        
-    # ==========================================
-    # 5. التقارير والإحصائيات
-    # ==========================================
-    elif menu == "التقارير والإحصائيات":
-        st.header("📊 تقارير الأداء والبيانات")
-        st.markdown("استعرض الإحصائيات الرئيسية وحمل تقارير البيانات.")
-        
-        st.subheader("سجل المتدربين حسب الدورة")
-        if st.session_state['trainees']:
-            df_trainees = pd.DataFrame(st.session_state['trainees']).T
-            course_counts = df_trainees['Course_Name'].value_counts()
-            st.bar_chart(course_counts, color=["#0077CC"]) # لون أزرق
-            
-        st.markdown("---")
-        
-        st.subheader("توزيع حالة تقارير التدقيق")
-        if st.session_state['audit_logs']:
-            df_audit = pd.DataFrame(st.session_state['audit_logs']).T
-            audit_counts = df_audit['Status'].value_counts().reset_index()
-            audit_counts.columns = ['الحالة', 'العدد']
-            st.dataframe(audit_counts, use_container_width=True, hide_index=True)
-        else:
-            st.info("لا توجد بيانات تدقيق لعرضها.")
-        
-        st.markdown("---")
-        
-        st.subheader("تحميل البيانات الخام")
-        col_dl1, col_dl2, col_dl3 = st.columns(3)
-        
-        if st.session_state['trainees']:
-            df_full_trainees = pd.DataFrame(st.session_state['trainees']).T
-            csv_trainees = df_full_trainees.to_csv(index=True).encode('utf-8')
-            col_dl1.download_button(
-                label="⬇️ تحميل بيانات المتدربين (CSV)", data=csv_trainees, file_name='تقارير_المتدربين.csv', mime='text/csv',)
-        if st.session_state['audit_logs']:
-            df_full_audit = pd.DataFrame(st.session_state['audit_logs']).T
-            csv_audit = df_full_audit.to_csv(index=True).encode('utf-8')
-            col_dl2.download_button(
-                label="⬇️ تحميل تقارير التدقيق (CSV)", data=csv_audit, file_name='تقارير_التدقيق.csv', mime='text/csv',)
-        if st.session_state['courses']:
-            df_full_courses = pd.DataFrame(st.session_state['courses']).T
-            csv_courses = df_full_courses.to_csv(index=True).encode('utf-8')
-            col_dl3.download_button(
-                label="⬇️ تحميل بيانات الدورات (CSV)", data=csv_courses, file_name='بيانات_الدورات.csv', mime='text/csv',)
-
-    # ==========================================
-    # 6. أدوات الإدارة المتقدمة
-    # ==========================================
-    elif menu == "أدوات الإدارة المتقدمة":
-        st.title("🔑 أدوات الإدارة المتقدمة")
-        st.error("تنبيه: هذا القسم يتيح حذف المتدربين وتقارير التدقيق. استخدمه بحذر شديد.")
-        
-        st.markdown("---")
-        
-        tab_trainees, tab_audit = st.tabs(["👥 إدارة المتدربين", "📝 إدارة تقارير التدقيق"])
-
-        # ---------------------------------------------
-        # A. إدارة المتدربين (حذف وتعديل)
-        # ---------------------------------------------
-        with tab_trainees:
-            st.subheader("قائمة المتدربين المسجلين")
-            if st.session_state['trainees']:
-                df_trainees = pd.DataFrame(st.session_state['trainees']).T
-                df_trainees['ID'] = df_trainees.index
-                st.dataframe(df_trainees[['ID', 'Name', 'College', 'Course_Name', 'Date']], use_container_width=True, hide_index=True)
-                trainee_ids = list(st.session_state['trainees'].keys())
-            else:
-                st.info("لا يوجد متدربون مسجلون.")
-                trainee_ids = []
-
-            st.markdown("### تحكم في المتدربين")
-            col_t1, col_t2 = st.columns(2)
-
-            # تعديل بيانات متدرب
-            with col_t1.expander("✍️ تعديل بيانات متدرب"):
-                if trainee_ids and st.session_state['courses']:
-                    trainee_to_update = st.selectbox("اختر المتدرب للتعديل", options=trainee_ids, format_func=lambda x: f"#{x} - {st.session_state['trainees'][x]['Name']}", key="update_t_select_advanced")
-                    current_data = st.session_state['trainees'][trainee_to_update]
-                    
-                    course_list = {k: v['Name'] for k, v in st.session_state['courses'].items()}
-                    course_ids = list(course_list.keys())
-                    
-                    with st.form("update_trainee_admin_form_advanced"):
-                        u_name = st.text_input("الاسم", value=current_data['Name'], key="u_name_t_advanced")
-                        u_college = st.selectbox("الكلية", ["تكنولوجيا المعلومات", "الهندسة", "العلوم", "العلوم الإدارية", "أخرى"], index=["تكنولوجيا المعلومات", "الهندسة", "العلوم", "العلوم الإدارية", "أخرى"].index(current_data['College']), key="u_college_t_advanced")
-                        u_course_id = st.selectbox("الدورة الجديدة", options=course_ids, format_func=lambda x: course_list[x], index=course_ids.index(current_data['Course_ID']), key="u_course_id_t_advanced")
-                        
-                        if st.form_submit_button("حفظ تعديلات المتدرب", key="submit_t_advanced"):
-                            st.session_state['trainees'][trainee_to_update]['Name'] = u_name
-                            st.session_state['trainees'][trainee_to_update]['College'] = u_college
-                            st.session_state['trainees'][trainee_to_update]['Course_ID'] = u_course_id
-                            st.session_state['trainees'][trainee_to_update]['Course_Name'] = course_list[u_course_id]
-                            st.success(f"✅ تم تحديث بيانات المتدرب **{u_name}** بنجاح.")
-                else:
-                    st.info("لا توجد بيانات متدربين أو دورات للتعديل.")
-
-            # حذف متدرب
-            with col_t2.expander("🗑️ حذف متدرب"):
-                if trainee_ids:
-                    trainee_to_delete = st.selectbox("اختر المتدرب للحذف", options=trainee_ids, format_func=lambda x: f"#{x} - {st.session_state['trainees'][x]['Name']}", key="delete_t_select_admin_advanced")
-                    if st.button("تأكيد حذف المتدرب", key="delete_t_btn_admin_advanced"):
-                        deleted_name = st.session_state['trainees'][trainee_to_delete]['Name']
-                        if delete_item(st.session_state['trainees'], trainee_to_delete):
-                            st.success(f"🗑️ تم حذف المتدرب **{deleted_name}** نهائياً.")
-                else:
-                    st.info("لا يوجد متدربون للحذف.")
-        
-        # ---------------------------------------------
-        # B. إدارة تقارير التدقيق (حذف وتعديل)
-        # ---------------------------------------------
-        with tab_audit:
-            st.subheader("سجل تقارير التدقيق الكامل")
-            if st.session_state['audit_logs']:
-                df_audit = pd.DataFrame(st.session_state['audit_logs']).T
-                df_audit['ID'] = df_audit.index
-                st.dataframe(df_audit[['ID', 'Lab', 'Auditor', 'Status', 'Time', 'Notes']], use_container_width=True, hide_index=True)
-                audit_ids = list(st.session_state['audit_logs'].keys())
-            else:
-                st.info("لا توجد تقارير تدقيق مرفوعة.")
-                audit_ids = []
-
-            st.markdown("### تحكم في التقارير")
-            col_a1, col_a2 = st.columns(2)
-            
-            # تعديل تقرير تدقيق
-            with col_a1.expander("✍️ تعديل تقرير تدقيق"):
-                if audit_ids:
-                    audit_to_update = st.selectbox("اختر التقرير للتعديل", options=audit_ids, format_func=lambda x: f"#{x} - {st.session_state['audit_logs'][x]['Lab']}", key="update_a_select_admin_advanced")
-                    current_data = st.session_state['audit_logs'][audit_to_update]
-                    
-                    with st.form("update_audit_admin_form_audit_advanced"):
-                        u_status = st.selectbox("حالة التدقيق", ["ممتاز", "⚠️ يحتاج متابعة فورية"], index=["ممتاز", "⚠️ يحتاج متابعة فورية"].index(current_data['Status']), key="u_status_audit_advanced")
-                        u_notes = st.text_area("تعديل الملاحظات", value=current_data['Notes'], key="u_notes_audit_advanced")
-                        
-                        if st.form_submit_button("حفظ تعديلات التقرير", key="submit_a_advanced"):
-                            st.session_state['audit_logs'][audit_to_update]['Status'] = u_status
-                            st.session_state['audit_logs'][audit_to_update]['Notes'] = u_notes
-                            st.success(f"✅ تم تحديث التقرير #{audit_to_update} بنجاح.")
-                else:
-                    st.info("لا توجد تقارير للتعديل.")
-
-            # حذف تقرير تدقيق
-            with col_a2.expander("🗑️ حذف تقرير"):
-                if audit_ids:
-                    audit_to_delete = st.selectbox("اختر التقرير للحذف", options=audit_ids, format_func=lambda x: f"#{x} - {st.session_state['audit_logs'][x]['Lab']}", key="delete_a_select_admin_advanced")
-                    if st.button("تأكيد حذف التقرير", key="delete_a_btn_admin_advanced"):
-                        deleted_lab = st.session_state['audit_logs'][audit_to_delete]['Lab']
-                        if delete_item(st.session_state['audit_logs'], audit_to_delete):
-                            st.success(f"🗑️ تم حذف التقرير الخاص بـ **{deleted_lab}** نهائياً.")
-                else:
-                    st.info("لا توجد تقارير للحذف.")
-
-
-else:
-    # ---------------------------------------------
-    # شاشة تسجيل الدخول والصفحة العامة (Public View)
-    # ---------------------------------------------
-    st.title("مركز النمذجة والمحاكاة بجامعة آل البيت")
-    st.subheader("تسجيل المتدربين ودخول نظام الإدارة")
-    
-    # قائمة الدورات المتاحة للتسجيل
-    available_courses = {k: v for k, v in st.session_state['courses'].items() if v['Status'] == 'متاحة للتسجيل'}
-    course_options = {f"#{k} - {v['Name']}": k for k, v in available_courses.items()}
-    
-    # تقسيم الصفحة إلى تسجيل دخول المدير وتسجيل المتدرب
-    tab_login, tab_register = st.tabs(["🔑 دخول المدير", "📝 تسجيل في دورة"])
-    
-    # ------------------
-    # 1. علامة تبويب دخول المدير
-    # ------------------
-    with tab_login:
-        st.info("الوصول إلى لوحة التحكم يقتصر على مديري النظام المصرح لهم فقط.")
-        
-        login_col1, login_col2 = st.columns([1, 1]) 
-        
-        with login_col1:
-            with st.form("login_form"):
-                username = st.text_input("اسم المستخدم")
-                password = st.text_input("كلمة المرور", type="password")
-                
-                if st.form_submit_button("🔑 تسجيل الدخول"):
-                    login_user(username, password)
-        
-        with login_col2:
-            st.markdown(f"""
-            <div style="margin-top: 30px; border-left: 3px solid {st.get_option("theme.primaryColor")}; padding-right: 15px;">
-                <p style="font-size: 1.1em; font-weight: bold; color: var(--accent-gold);">
-                    مركز النمذجة والمحاكاة - جامعة آل البيت:
-                </p>
-                <p style="color: var(--text-muted);">
-                    نحن ملتزمون بتوفير بيئة تدريب وتطوير عالية الجودة في مجالات النمذجة والمحاكاة والواقع الافتراضي، باستخدام أحدث التقنيات.
-                </p>
-            </div>
-            """, unsafe_allow_html=True)
-            
-    # ------------------
-    # 2. علامة تبويب تسجيل المتدرب
-    # ------------------
-    with tab_register:
-        st.header("التسجيل في الدورات التدريبية المتاحة")
-        st.markdown("يرجى ملء النموذج أدناه للتسجيل في إحدى الدورات التي يتم قبول طلبات التسجيل فيها حالياً.")
-        
-        if not available_courses:
-            st.warning("⚠️ لا توجد دورات متاحة للتسجيل حالياً. يرجى مراجعة الموقع لاحقاً.")
-        else:
-            with st.form("trainee_registration_form", clear_on_submit=True):
-                t_name = st.text_input("الاسم الرباعي الكامل (كما في الوثائق الرسمية)")
-                t_type = st.selectbox("النوع / الصفة", ["طالب بكالوريوس", "طالب دراسات عليا", "موظف جامعة", "خريج", "من خارج الجامعة"])
-                t_college = st.selectbox("الكلية / الجهة المنتمي إليها", ["تكنولوجيا المعلومات", "الهندسة", "العلوم", "العلوم الإدارية", "الآداب", "أخرى"])
-                
-                selected_course_key = st.selectbox("اختر الدورة للتسجيل", options=list(course_options.keys()))
-                
-                register_button = st.form_submit_button("✅ إرسال طلب التسجيل")
-                
-                if register_button:
-                    if t_name and selected_course_key:
-                        course_id_selected = course_options[selected_course_key]
-                        course_name_selected = available_courses[course_id_selected]['Name']
-                        
-                        # إنشاء إدخال المتدرب الجديد
-                        new_trainee_id = get_next_id(st.session_state['trainees'])
-                        st.session_state['trainees'][new_trainee_id] = {
-                            "Name": t_name,
-                            "Type": t_type,
-                            "College": t_college,
-                            "Course_ID": course_id_selected,
-                            "Course_Name": course_name_selected,
-                            "Date": datetime.now().strftime("%Y-%m-%d")
-                        }
-                        
-                        st.success(f"🎉 تم تسجيلك بنجاح في دورة **{course_name_selected}**! سيتم التواصل معك قريباً لتأكيد موعد الدورة.")
-                    else:
-                        st.error("الرجاء تعبئة جميع الحقول المطلوبة (الاسم واختيار الدورة).")
+            if assigned_course_id is not None:
+                course_name = st.session_state['courses'][assigned_course_id]['Name']
+                st.
