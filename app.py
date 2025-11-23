@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime
+import io
 
 # ==========================================
 # 🛑 1. إعدادات المصادقة (الأمان) 🛡️
@@ -293,17 +294,14 @@ if st.session_state['logged_in']:
 
 
     # ==========================================
-    # 1. لوحة التحكم (الصفحة الرئيسية الجديدة)
+    # 1. لوحة التحكم (الصفحة الرئيسية)
     # ==========================================
     if menu == "🖥️ لوحة التحكم":
         st.markdown(f"""
         <div class="logo-container">
             
 
-
-
 [Image of logo.jpg]
-
 
         </div>
         """, unsafe_allow_html=True)
@@ -576,4 +574,290 @@ if st.session_state['logged_in']:
             st.info("لا يوجد مدربون مضافون في النظام.")
         
     # ==========================================
-    # 4. قسم التدقيق والمتابعة
+    # 4. قسم التدقيق والمتابعة (المصحح)
+    # ==========================================
+    elif menu == "🔎 التدقيق والمتابعة":
+        st.header("🔍 التدقيق اليومي للمرافق والبرامج")
+        st.markdown("املأ هذا النموذج لرفع تقارير التدقيق الدورية.")
+        
+        with st.form("audit_form", clear_on_submit=True):
+            col1, col2 = st.columns(2)
+            with col1:
+                lab_id = st.selectbox("المرفق / المختبر", ["مختبر النمذجة", "مختبر المحاكاة", "قاعة التدريب 1", "قاعة التدريب 2", "أخرى"], key="audit_lab")
+                auditor = st.text_input("اسم المدقق المسؤول", key="audit_auditor")
+            
+            st.markdown("---")
+            st.markdown("**قائمة التحقق لضمان الجودة:**")
+            
+            check_col1, check_col2, check_col3 = st.columns(3)
+            check_sw = check_col1.checkbox("البرمجيات تعمل بكفاءة (الرخص سارية)", help="تأكد من عمل جميع البرامج والرخص.")
+            check_hw = check_col2.checkbox("الأجهزة والمعدات سليمة (تكييف/كهرباء/شبكة)", help="فحص الأجهزة العامة والفرعية.")
+            check_cl = check_col3.checkbox("نظافة القاعة والترتيب العام", help="تأكد من النظافة والترتيب بعد الاستخدام.")
+            
+            notes = st.text_area("ملاحظات تفصيلية أو طلبات صيانة عاجلة", key="audit_notes")
+            
+            submit_audit = st.form_submit_button("✅ رفع تقرير التدقيق")
+            
+            if submit_audit and auditor:
+                new_id = get_next_id(st.session_state['audit_logs'])
+                status_text = "ممتاز" if (check_sw and check_hw and check_cl) else "⚠️ يحتاج متابعة فورية"
+                audit_entry = {
+                    "Lab": lab_id,
+                    "Auditor": auditor,
+                    "Time": datetime.now().strftime("%Y-%m-%d %H:%M"),
+                    "Status": status_text,
+                    "Notes": notes
+                }
+                st.session_state['audit_logs'][new_id] = audit_entry
+                if status_text == "ممتاز":
+                    st.success("👍 تم حفظ التقرير بنجاح. المرافق بحالة ممتازة.")
+                else:
+                    st.error(f"🚨 تم تسجيل التقرير. حالة المرفق **{status_text}**.")
+            elif submit_audit and not auditor:
+                st.warning("الرجاء إدخال اسم المدقق المسؤول.")
+        
+    # ==========================================
+    # 5. التقارير والإحصائيات (المصحح)
+    # ==========================================
+    elif menu == "📈 التقارير والإحصائيات":
+        st.header("📊 تقارير الأداء والبيانات")
+        st.markdown("استعرض الإحصائيات الرئيسية وحمل تقارير البيانات.")
+        
+        st.subheader("سجل المتدربين حسب الدورة")
+        if st.session_state['trainees']:
+            df_trainees = pd.DataFrame(st.session_state['trainees']).T
+            course_counts = df_trainees['Course_Name'].value_counts()
+            st.bar_chart(course_counts, color=["#CDA434"]) # لون ذهبي نحاسي
+            
+        st.markdown("---")
+        
+        st.subheader("توزيع حالة تقارير التدقيق")
+        if st.session_state['audit_logs']:
+            df_audit = pd.DataFrame(st.session_state['audit_logs']).T
+            audit_counts = df_audit['Status'].value_counts().reset_index()
+            audit_counts.columns = ['الحالة', 'العدد']
+            st.dataframe(audit_counts, use_container_width=True, hide_index=True)
+        else:
+            st.info("لا توجد بيانات تدقيق لعرضها.")
+        
+        st.markdown("---")
+        
+        st.subheader("تحميل البيانات الخام")
+        col_dl1, col_dl2, col_dl3 = st.columns(3)
+        
+        if st.session_state['trainees']:
+            df_full_trainees = pd.DataFrame(st.session_state['trainees']).T
+            # استخدام io.BytesIO لتجنب مشاكل ترميز (Encoding) البيانات العربية عند التحميل
+            buffer = io.BytesIO()
+            df_full_trainees.to_csv(buffer, index=True, encoding='utf-8-sig') # استخدام sig لترميز صحيح في Excel
+            csv_trainees = buffer.getvalue()
+            
+            col_dl1.download_button(
+                label="⬇️ تحميل بيانات المتدربين (CSV)", data=csv_trainees, file_name='تقارير_المتدربين.csv', mime='text/csv;charset=utf-8',)
+        
+        if st.session_state['audit_logs']:
+            df_full_audit = pd.DataFrame(st.session_state['audit_logs']).T
+            buffer = io.BytesIO()
+            df_full_audit.to_csv(buffer, index=True, encoding='utf-8-sig')
+            csv_audit = buffer.getvalue()
+
+            col_dl2.download_button(
+                label="⬇️ تحميل تقارير التدقيق (CSV)", data=csv_audit, file_name='تقارير_التدقيق.csv', mime='text/csv;charset=utf-8',)
+        
+        if st.session_state['courses']:
+            df_full_courses = pd.DataFrame(st.session_state['courses']).T
+            buffer = io.BytesIO()
+            df_full_courses.to_csv(buffer, index=True, encoding='utf-8-sig')
+            csv_courses = buffer.getvalue()
+            
+            col_dl3.download_button(
+                label="⬇️ تحميل بيانات الدورات (CSV)", data=csv_courses, file_name='بيانات_الدورات.csv', mime='text/csv;charset=utf-8',)
+
+    # ==========================================
+    # 6. أدوات الإدارة المتقدمة (المصحح)
+    # ==========================================
+    elif menu == "🔒 أدوات الإدارة المتقدمة":
+        st.title("🔑 أدوات الإدارة المتقدمة")
+        st.error("تنبيه: هذا القسم يتيح حذف المتدربين وتقارير التدقيق. استخدمه بحذر شديد.")
+        
+        st.markdown("---")
+        
+        tab_trainees, tab_audit = st.tabs(["👥 إدارة المتدربين", "📝 إدارة تقارير التدقيق"])
+
+        # ---------------------------------------------
+        # A. إدارة المتدربين (حذف وتعديل)
+        # ---------------------------------------------
+        with tab_trainees:
+            st.subheader("قائمة المتدربين المسجلين")
+            if st.session_state['trainees']:
+                df_trainees = pd.DataFrame(st.session_state['trainees']).T
+                df_trainees['ID'] = df_trainees.index
+                st.dataframe(df_trainees[['ID', 'Name', 'College', 'Course_Name', 'Date']], use_container_width=True, hide_index=True)
+                trainee_ids = list(st.session_state['trainees'].keys())
+            else:
+                st.info("لا يوجد متدربون مسجلون.")
+                trainee_ids = []
+
+            st.markdown("### تحكم في المتدربين")
+            col_t1, col_t2 = st.columns(2)
+
+            # تعديل بيانات متدرب
+            with col_t1.expander("✍️ تعديل بيانات متدرب"):
+                if trainee_ids and st.session_state['courses']:
+                    trainee_to_update = st.selectbox("اختر المتدرب للتعديل", options=trainee_ids, format_func=lambda x: f"#{x} - {st.session_state['trainees'][x]['Name']}", key="update_t_select_advanced")
+                    current_data = st.session_state['trainees'][trainee_to_update]
+                    
+                    course_list = {k: v['Name'] for k, v in st.session_state['courses'].items()}
+                    course_ids = list(course_list.keys())
+                    
+                    with st.form("update_trainee_admin_form_advanced"):
+                        u_name = st.text_input("الاسم", value=current_data['Name'], key="u_name_t_advanced")
+                        u_college = st.selectbox("الكلية", ["تكنولوجيا المعلومات", "الهندسة", "العلوم", "العلوم الإدارية", "أخرى"], index=["تكنولوجيا المعلومات", "الهندسة", "العلوم", "العلوم الإدارية", "أخرى"].index(current_data['College']), key="u_college_t_advanced")
+                        u_course_id = st.selectbox("الدورة الجديدة", options=course_ids, format_func=lambda x: course_list[x], index=course_ids.index(current_data['Course_ID']), key="u_course_id_t_advanced")
+                        
+                        if st.form_submit_button("حفظ تعديلات المتدرب", key="submit_t_advanced"):
+                            st.session_state['trainees'][trainee_to_update]['Name'] = u_name
+                            st.session_state['trainees'][trainee_to_update]['College'] = u_college
+                            st.session_state['trainees'][trainee_to_update]['Course_ID'] = u_course_id
+                            st.session_state['trainees'][trainee_to_update]['Course_Name'] = course_list[u_course_id]
+                            st.success(f"✅ تم تحديث بيانات المتدرب **{u_name}** بنجاح.")
+                else:
+                    st.info("لا توجد بيانات متدربين أو دورات للتعديل.")
+
+            # حذف متدرب
+            with col_t2.expander("🗑️ حذف متدرب"):
+                if trainee_ids:
+                    trainee_to_delete = st.selectbox("اختر المتدرب للحذف", options=trainee_ids, format_func=lambda x: f"#{x} - {st.session_state['trainees'][x]['Name']}", key="delete_t_select_admin_advanced")
+                    if st.button("تأكيد حذف المتدرب", key="delete_t_btn_admin_advanced"):
+                        deleted_name = st.session_state['trainees'][trainee_to_delete]['Name']
+                        if delete_item(st.session_state['trainees'], trainee_to_delete):
+                            st.success(f"🗑️ تم حذف المتدرب **{deleted_name}** نهائياً.")
+                else:
+                    st.info("لا يوجد متدربون للحذف.")
+        
+        # ---------------------------------------------
+        # B. إدارة تقارير التدقيق (حذف وتعديل)
+        # ---------------------------------------------
+        with tab_audit:
+            st.subheader("سجل تقارير التدقيق الكامل")
+            if st.session_state['audit_logs']:
+                df_audit = pd.DataFrame(st.session_state['audit_logs']).T
+                df_audit['ID'] = df_audit.index
+                st.dataframe(df_audit[['ID', 'Lab', 'Auditor', 'Status', 'Time', 'Notes']], use_container_width=True, hide_index=True)
+                audit_ids = list(st.session_state['audit_logs'].keys())
+            else:
+                st.info("لا توجد تقارير تدقيق مرفوعة.")
+                audit_ids = []
+
+            st.markdown("### تحكم في التقارير")
+            col_a1, col_a2 = st.columns(2)
+            
+            # تعديل تقرير تدقيق
+            with col_a1.expander("✍️ تعديل تقرير تدقيق"):
+                if audit_ids:
+                    audit_to_update = st.selectbox("اختر التقرير للتعديل", options=audit_ids, format_func=lambda x: f"#{x} - {st.session_state['audit_logs'][x]['Lab']}", key="update_a_select_admin_advanced")
+                    current_data = st.session_state['audit_logs'][audit_to_update]
+                    
+                    with st.form("update_audit_admin_form_audit_advanced"):
+                        u_status = st.selectbox("حالة التدقيق", ["ممتاز", "⚠️ يحتاج متابعة فورية"], index=["ممتاز", "⚠️ يحتاج متابعة فورية"].index(current_data['Status']), key="u_status_audit_advanced")
+                        u_notes = st.text_area("تعديل الملاحظات", value=current_data['Notes'], key="u_notes_audit_advanced")
+                        
+                        if st.form_submit_button("حفظ تعديلات التقرير", key="submit_a_advanced"):
+                            st.session_state['audit_logs'][audit_to_update]['Status'] = u_status
+                            st.session_state['audit_logs'][audit_to_update]['Notes'] = u_notes
+                            st.success(f"✅ تم تحديث التقرير #{audit_to_update} بنجاح.")
+                else:
+                    st.info("لا توجد تقارير للتعديل.")
+
+            # حذف تقرير تدقيق
+            with col_a2.expander("🗑️ حذف تقرير"):
+                if audit_ids:
+                    audit_to_delete = st.selectbox("اختر التقرير للحذف", options=audit_ids, format_func=lambda x: f"#{x} - {st.session_state['audit_logs'][x]['Lab']}", key="delete_a_select_admin_advanced")
+                    if st.button("تأكيد حذف التقرير", key="delete_a_btn_admin_advanced"):
+                        deleted_lab = st.session_state['audit_logs'][audit_to_delete]['Lab']
+                        if delete_item(st.session_state['audit_logs'], audit_to_delete):
+                            st.success(f"🗑️ تم حذف التقرير الخاص بـ **{deleted_lab}** نهائياً.")
+                else:
+                    st.info("لا توجد تقارير للحذف.")
+
+
+else:
+    # ---------------------------------------------
+    # شاشة تسجيل الدخول والصفحة العامة (Public View)
+    # ---------------------------------------------
+    st.title("مركز النمذجة والمحاكاة بجامعة آل البيت")
+    st.subheader("تسجيل المتدربين ودخول نظام الإدارة")
+    
+    # قائمة الدورات المتاحة للتسجيل
+    available_courses = {k: v for k, v in st.session_state['courses'].items() if v['Status'] == 'متاحة للتسجيل'}
+    course_options = {f"#{k} - {v['Name']}": k for k, v in available_courses.items()}
+    
+    # تقسيم الصفحة إلى تسجيل دخول المدير وتسجيل المتدرب
+    tab_login, tab_register = st.tabs(["🔑 دخول المدير", "📝 تسجيل في دورة"])
+    
+    # ------------------
+    # 1. علامة تبويب دخول المدير
+    # ------------------
+    with tab_login:
+        st.info("الوصول إلى لوحة التحكم يقتصر على مديري النظام المصرح لهم فقط.")
+        
+        login_col1, login_col2 = st.columns([1, 1]) 
+        
+        with login_col1:
+            with st.form("login_form"):
+                username = st.text_input("اسم المستخدم")
+                password = st.text_input("كلمة المرور", type="password")
+                
+                if st.form_submit_button("🔑 تسجيل الدخول"):
+                    login_user(username, password)
+        
+        with login_col2:
+            st.markdown(f"""
+            <div style="margin-top: 30px; border-right: 3px solid var(--accent-gold); padding-left: 15px;">
+                <p style="font-size: 1.1em; font-weight: bold; color: var(--accent-gold);">
+                    مركز النمذجة والمحاكاة - جامعة آل البيت:
+                </p>
+                <p style="color: var(--text-muted);">
+                    نحن ملتزمون بتوفير بيئة تدريب وتطوير عالية الجودة في مجالات النمذجة والمحاكاة والواقع الافتراضي، باستخدام أحدث التقنيات.
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+    # ------------------
+    # 2. علامة تبويب تسجيل المتدرب
+    # ------------------
+    with tab_register:
+        st.header("التسجيل في الدورات التدريبية المتاحة")
+        st.markdown("يرجى ملء النموذج أدناه للتسجيل في إحدى الدورات التي يتم قبول طلبات التسجيل فيها حالياً.")
+        
+        if not available_courses:
+            st.warning("⚠️ لا توجد دورات متاحة للتسجيل حالياً. يرجى مراجعة الموقع لاحقاً.")
+        else:
+            with st.form("trainee_registration_form", clear_on_submit=True):
+                t_name = st.text_input("الاسم الرباعي الكامل (كما في الوثائق الرسمية)")
+                t_type = st.selectbox("النوع / الصفة", ["طالب بكالوريوس", "طالب دراسات عليا", "موظف جامعة", "خريج", "من خارج الجامعة"])
+                t_college = st.selectbox("الكلية / الجهة المنتمي إليها", ["تكنولوجيا المعلومات", "الهندسة", "العلوم", "العلوم الإدارية", "الآداب", "أخرى"])
+                
+                selected_course_key = st.selectbox("اختر الدورة للتسجيل", options=list(course_options.keys()))
+                
+                register_button = st.form_submit_button("✅ إرسال طلب التسجيل")
+                
+                if register_button:
+                    if t_name and selected_course_key:
+                        course_id_selected = course_options[selected_course_key]
+                        course_name_selected = available_courses[course_id_selected]['Name']
+                        
+                        # إنشاء إدخال المتدرب الجديد
+                        new_trainee_id = get_next_id(st.session_state['trainees'])
+                        st.session_state['trainees'][new_trainee_id] = {
+                            "Name": t_name,
+                            "Type": t_type,
+                            "College": t_college,
+                            "Course_ID": course_id_selected,
+                            "Course_Name": course_name_selected,
+                            "Date": datetime.now().strftime("%Y-%m-%d")
+                        }
+                        
+                        st.success(f"🎉 تم تسجيلك بنجاح في دورة **{course_name_selected}**! سيتم التواصل معك قريباً لتأكيد موعد الدورة.")
+                    else:
+                        st.error("الرجاء تعبئة جميع الحقول المطلوبة (الاسم واختيار الدورة).")
