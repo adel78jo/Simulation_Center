@@ -13,7 +13,7 @@ ADMIN_PASS = "Aabu2025"
 if 'logged_in' not in st.session_state:
     st.session_state['logged_in'] = False
 
-# البيانات الأولية (المحدثة بهياكل البيانات الجديدة: Date و Location للدورات)
+# البيانات الأولية (المحدثة بهياكل البيانات الجديدة: Date و Location و National_ID)
 if 'courses' not in st.session_state:
     st.session_state['courses'] = {
         1: {"Name": "أساسيات المحاكاة (Arena)", "Status": "متاحة للتسجيل", "Trainer_ID": 502, "Date": "2026-01-15", "Location": "قاعة التدريب 1"},
@@ -301,19 +301,21 @@ if st.session_state['logged_in']:
         st.header("📝 إدارة الدورات والمواعيد والمواقع")
         st.markdown("تحكم كامل في بيانات الدورات، بما في ذلك الاسم، الحالة، المدرب، الموعد، والموقع.")
         
-        # قائمة الدورات الحالية
+        # 🛑 المنطقة المصححة: تحقق من وجود بيانات الدورات قبل العرض 🛑
         if st.session_state['courses']:
             st.subheader("قائمة الدورات الحالية وتفاصيلها")
             
+            # إنشاء DataFrame وبناء الأعمدة المطلوبة
             df_courses = pd.DataFrame(st.session_state['courses']).T
             trainer_names = {k: v['Name'] for k, v in st.session_state['trainers'].items()}
+            
             df_courses['Trainer_Name'] = df_courses['Trainer_ID'].apply(lambda x: trainer_names.get(x, 'غير مسند'))
             
             df_courses['ID'] = df_courses.index
             st.dataframe(df_courses[['ID', 'Name', 'Status', 'Trainer_Name', 'Date', 'Location']], use_container_width=True, hide_index=True)
             course_ids = list(st.session_state['courses'].keys())
         else:
-            st.info("لا توجد دورات حالياً.")
+            st.info("لا توجد دورات حالياً. ابدأ بإضافة دورة جديدة من الأسفل.")
             course_ids = []
             
         st.markdown("---")
@@ -331,7 +333,7 @@ if st.session_state['logged_in']:
             with st.form("add_course_admin_form", clear_on_submit=True):
                 new_name = st.text_input("اسم الدورة")
                 new_status = st.selectbox("حالة الدورة", ["متاحة للتسجيل", "قيد الإعداد", "مكتملة"])
-                new_date = st.date_input("موعد بدء الدورة", value=datetime.today(), min_value=datetime.today())
+                new_date = st.date_input("موعد بدء الدورة", value=datetime.today().date(), min_value=datetime.today().date())
                 new_location = st.text_input("موقع انعقاد الدورة (قاعة/مختبر)")
                 selected_trainer_name = st.selectbox("إسناد مدرب للدورة", options=list(trainer_options.keys()))
                 
@@ -348,10 +350,11 @@ if st.session_state['logged_in']:
                             "Location": new_location
                         }
                         
-                        if trainer_id_to_assign and trainer_id_to_assign != None:
+                        if trainer_id_to_assign is not None:
                             st.session_state['trainers'][trainer_id_to_assign]['Assigned_Course_ID'] = new_id
                         
                         st.success(f"✅ تمت إضافة الدورة **{new_name}** بالموعد {new_date} والموقع **{new_location}**.")
+                        st.rerun() 
                     else:
                         st.error("الرجاء إدخال اسم الدورة والموقع.")
         
@@ -397,11 +400,11 @@ if st.session_state['logged_in']:
                         })
                         
                         st.success(f"✅ تم تعديل الدورة #{course_to_update} بنجاح. الموعد الجديد: {updated_date} والموقع: **{updated_location}**")
+                        st.rerun()
             else:
                 st.info("لا توجد دورات للتعديل.")
         
         with col_c3.expander("🗑️ حذف دورة"):
-            # (نفس منطق الحذف السابق)
             if course_ids:
                 course_to_delete = st.selectbox("اختر الدورة للحذف", options=course_ids, format_func=lambda x: f"#{x} - {st.session_state['courses'][x]['Name']}", key="delete_c_select")
                 if st.button("تأكيد حذف الدورة", key="delete_c_btn"):
@@ -413,11 +416,12 @@ if st.session_state['logged_in']:
                          
                     if delete_item(st.session_state['courses'], course_to_delete):
                         st.success(f"🗑️ تم حذف الدورة **{deleted_name}** نهائياً.")
+                        st.rerun()
             else:
                 st.info("لا توجد دورات للحذف.")
 
     # ==========================================
-    # 3. قسم إدارة المدربين
+    # 3. قسم إدارة المدربين (تمت إضافة شروط الحماية من البيانات الفارغة)
     # ==========================================
     elif menu == "👨‍🏫 إدارة المدربين":
         st.header("🧑‍🏫 إدارة ومتابعة المدربين")
@@ -427,7 +431,12 @@ if st.session_state['logged_in']:
         if st.session_state['trainers']:
             df_trainers = pd.DataFrame(st.session_state['trainers']).T
             
-            course_names = {k: v['Name'] for k, v in st.session_state['courses'].items()}
+            # يجب أن يكون القاموس موجوداً لإجراء الربط
+            if st.session_state['courses']:
+                course_names = {k: v['Name'] for k, v in st.session_state['courses'].items()}
+            else:
+                course_names = {}
+                
             df_trainers['Assigned_Course_Name'] = df_trainers['Assigned_Course_ID'].apply(lambda x: course_names.get(x, 'غير مسند'))
             
             df_trainers['Trainer_ID'] = df_trainers.index
@@ -435,7 +444,6 @@ if st.session_state['logged_in']:
             st.subheader("قائمة المدربين وحالة الإسناد")
             st.dataframe(df_trainers[['Trainer_ID', 'Name', 'Specialty', 'Assigned_Course_Name']], use_container_width=True, hide_index=True)
 
-            # ... (باقي منطق عرض مسجلي الدورات كما هو) ...
             st.markdown("---")
             
             st.subheader("تفقد قائمة المسجلين لكل مدرب")
@@ -449,7 +457,7 @@ if st.session_state['logged_in']:
                 assigned_course_id = st.session_state['trainers'][trainer_id]['Assigned_Course_ID']
                 trainer_name = st.session_state['trainers'][trainer_id]['Name']
                 
-                if assigned_course_id is not None:
+                if assigned_course_id is not None and assigned_course_id in st.session_state['courses']:
                     course_name = st.session_state['courses'][assigned_course_id]['Name']
                     st.success(f"المدرب **{trainer_name}** مسند لدورة: **{course_name}** (ID: {assigned_course_id})")
 
@@ -472,7 +480,7 @@ if st.session_state['logged_in']:
                         st.info("لا يوجد متدربون في النظام بعد.")
                         
                 else:
-                    st.warning(f"المدرب **{trainer_name}** غير مسند لأي دورة حالياً.")
+                    st.warning(f"المدرب **{trainer_name}** غير مسند لأي دورة حالياً أو الدورة المسندة غير موجودة.")
         
         else:
             st.info("لا يوجد مدربون مضافون في النظام.")
@@ -484,11 +492,12 @@ if st.session_state['logged_in']:
         st.header("👥 إدارة وتعديل بيانات المتدربين")
         st.markdown("تحكم كامل في بيانات المتدربين (الاسم، رقم الهوية، الكلية، الدورة المسجل بها، إلخ).")
         
+        # 🛑 التصحيح هنا: نتحقق من وجود المتدربين أولاً
         if st.session_state['trainees']:
             st.subheader("قائمة المتدربين المسجلين")
             df_trainees = pd.DataFrame(st.session_state['trainees']).T
             df_trainees['ID'] = df_trainees.index
-            # عرض National_ID الجديد
+            
             st.dataframe(df_trainees[['ID', 'Name', 'National_ID', 'College', 'Course_Name', 'Date']], use_container_width=True, hide_index=True)
             trainee_ids = list(st.session_state['trainees'].keys())
         else:
@@ -524,6 +533,7 @@ if st.session_state['logged_in']:
                         st.session_state['trainees'][trainee_to_update]['Course_ID'] = u_course_id
                         st.session_state['trainees'][trainee_to_update]['Course_Name'] = course_list[u_course_id]
                         st.success(f"✅ تم تحديث بيانات المتدرب **{u_name}** ورقم الهوية **{u_national_id}** بنجاح.")
+                        st.rerun()
             else:
                 st.info("لا توجد بيانات متدربين أو دورات للتعديل.")
 
@@ -535,6 +545,7 @@ if st.session_state['logged_in']:
                     deleted_name = st.session_state['trainees'][trainee_to_delete]['Name']
                     if delete_item(st.session_state['trainees'], trainee_to_delete):
                         st.success(f"🗑️ تم حذف المتدرب **{deleted_name}** نهائياً.")
+                        st.rerun()
             else:
                 st.info("لا يوجد متدربون للحذف.")
 
@@ -554,6 +565,8 @@ if st.session_state['logged_in']:
                 df_trainees = pd.DataFrame(st.session_state['trainees']).T
                 course_counts = df_trainees['Course_Name'].value_counts()
                 st.bar_chart(course_counts, color=["#CDA434"])
+            else:
+                st.info("لا توجد بيانات متدربين للعرض.")
             
             st.markdown("---")
             st.subheader("توزيع حالة تقارير التدقيق")
@@ -562,6 +575,8 @@ if st.session_state['logged_in']:
                 audit_counts = df_audit['Status'].value_counts().reset_index()
                 audit_counts.columns = ['الحالة', 'العدد']
                 st.dataframe(audit_counts, use_container_width=True, hide_index=True)
+            else:
+                st.info("لا توجد تقارير تدقيق للعرض.")
         
         with tab_download:
             st.subheader("تحميل البيانات الخام (CSV)")
@@ -598,13 +613,12 @@ if st.session_state['logged_in']:
                 col_dl3.download_button(
                     label="⬇️ تحميل بيانات الدورات", data=csv_courses, file_name='بيانات_الدورات.csv', mime='text/csv;charset=utf-8',)
 
-        # 🛑 قسم الطباعة الجديد 🛑
+        # 🛑 قسم الطباعة المصحح (لحل مشكلة KeyError عند اختيار دورة محذوفة) 🛑
         with tab_print:
             st.subheader("إعداد تقرير تفصيلي لدورة للطباعة")
             
             course_ids = list(st.session_state['courses'].keys())
             if course_ids:
-                # دالة مساعدة لربط المعرف بالاسم
                 course_name_map = {cid: data['Name'] for cid, data in st.session_state['courses'].items()}
                 
                 selected_course_id = st.selectbox(
@@ -614,7 +628,7 @@ if st.session_state['logged_in']:
                     key="print_report_course_select"
                 )
                 
-                if selected_course_id:
+                if selected_course_id in st.session_state['courses']:
                     course_data = st.session_state['courses'][selected_course_id]
                     trainer_name = st.session_state['trainers'].get(course_data.get('Trainer_ID'), {}).get('Name', 'غير مسند')
                     
@@ -622,7 +636,7 @@ if st.session_state['logged_in']:
                     
                     st.info("التقرير جاهز. اضغط **Ctrl+P** أو **Cmd+P** لطباعة الصفحة.")
                     
-                    # 📄 محتوى التقرير (يتم إعداده ليكون جاهزاً للطباعة)
+                    # 📄 محتوى التقرير 
                     st.markdown(f"""
                     <div style="direction: rtl; padding: 20px; border: 1px solid #ddd; border-radius: 10px; margin-top: 20px; background-color: #ffffff;">
                         <h2 style="color: #CDA434; text-align: center; border-bottom: 2px solid #CDA434; padding-bottom: 10px;">
@@ -645,18 +659,23 @@ if st.session_state['logged_in']:
                     st.markdown("### قائمة المتدربين المسجلين")
 
                     # استخراج قائمة المتدربين
-                    df_trainees_filtered = pd.DataFrame(st.session_state['trainees']).T
-                    df_trainees_filtered = df_trainees_filtered[df_trainees_filtered['Course_ID'] == selected_course_id]
-                    
-                    if not df_trainees_filtered.empty:
-                        df_report = df_trainees_filtered[['Name', 'National_ID', 'College', 'Type', 'Date']].reset_index(names=['Trainee_ID'])
-                        df_report.columns = ['رقم المتدرب', 'الاسم الكامل', 'رقم الهوية', 'الكلية/الجهة', 'الصفة', 'تاريخ التسجيل']
+                    if st.session_state['trainees']: # تحقق إضافي
+                        df_trainees_filtered = pd.DataFrame(st.session_state['trainees']).T
+                        df_trainees_filtered = df_trainees_filtered[df_trainees_filtered['Course_ID'] == selected_course_id]
                         
-                        # عرض الجدول ليكون سهل الطباعة
-                        st.dataframe(df_report, use_container_width=True, hide_index=True)
-                        st.markdown(f"**إجمالي عدد المشاركين:** {len(df_report)}")
+                        if not df_trainees_filtered.empty:
+                            df_report = df_trainees_filtered[['Name', 'National_ID', 'College', 'Type', 'Date']].reset_index(names=['Trainee_ID'])
+                            df_report.columns = ['رقم المتدرب', 'الاسم الكامل', 'رقم الهوية', 'الكلية/الجهة', 'الصفة', 'تاريخ التسجيل']
+                            
+                            st.dataframe(df_report, use_container_width=True, hide_index=True)
+                            st.markdown(f"**إجمالي عدد المشاركين:** {len(df_report)}")
+                        else:
+                            st.warning("لا يوجد متدربون مسجلون في هذه الدورة حتى الآن.")
                     else:
-                        st.warning("لا يوجد متدربون مسجلون في هذه الدورة حتى الآن.")
+                        st.info("لا يوجد متدربون مسجلون في النظام لعرضهم.")
+
+                else:
+                    st.warning("الدورة المختارة غير موجودة حالياً في النظام.")
             else:
                 st.warning("يجب إضافة دورات أولاً لإعداد التقارير.")
 
@@ -702,6 +721,7 @@ if st.session_state['logged_in']:
                     st.success("👍 تم حفظ التقرير بنجاح. المرافق بحالة ممتازة.")
                 else:
                     st.error(f"🚨 تم تسجيل التقرير. حالة المرفق **{status_text}**.")
+                st.rerun()
             elif submit_audit and not auditor:
                 st.warning("الرجاء إدخال اسم المدقق المسؤول.")
 
@@ -783,5 +803,6 @@ else:
                         }
                         
                         st.success(f"🎉 تم تسجيلك بنجاح في دورة **{course_name_selected}**! رقم هويتك المسجل هو **{t_national_id}**.")
+                        st.rerun()
                     else:
                         st.error("الرجاء تعبئة جميع الحقول المطلوبة (الاسم ورقم الهوية واختيار الدورة).")
