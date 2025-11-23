@@ -233,10 +233,10 @@ if st.session_state['logged_in']:
         "القائمة الرئيسية:",
         (
             "🖥️ لوحة التحكم",
-            "📖 إدارة الدورات والمواعيد",          # صلاحيات تعديل الدورة، الموعد، الموقع، المدرب
+            "📖 إدارة الدورات والمواعيد",         
             "👨‍🏫 إدارة المدربين",
-            "👥 إدارة المتدربين المسجلين",        # صلاحيات تعديل وحذف المتدربين
-            "📈 التقارير والإحصائيات والطباعة",  # صلاحيات تقارير شاملة وطباعة
+            "👥 إدارة المتدربين المسجلين",        
+            "📈 التقارير والإحصائيات والطباعة",  
             "🔎 التدقيق والمتابعة" 
         ),
         key="main_admin_menu"
@@ -296,23 +296,29 @@ if st.session_state['logged_in']:
 
     # ==========================================
     # 2. قسم إدارة الدورات والمواعيد (صلاحية التعديل الكاملة)
+    # 🛑 تم تأمين هذا القسم باستخدام reindex لحل آخر KeyError 🛑
     # ==========================================
     elif menu == "📖 إدارة الدورات والمواعيد":
         st.header("📝 إدارة الدورات والمواعيد والمواقع")
         st.markdown("تحكم كامل في بيانات الدورات، بما في ذلك الاسم، الحالة، المدرب، الموعد، والموقع.")
         
-        # 🛑 المنطقة المصححة: تحقق من وجود بيانات الدورات قبل العرض 🛑
         if st.session_state['courses']:
             st.subheader("قائمة الدورات الحالية وتفاصيلها")
             
-            # إنشاء DataFrame وبناء الأعمدة المطلوبة
+            # 1. إنشاء DataFrame 
             df_courses = pd.DataFrame(st.session_state['courses']).T
             trainer_names = {k: v['Name'] for k, v in st.session_state['trainers'].items()}
             
+            # 2. بناء الأعمدة المطلوبة
             df_courses['Trainer_Name'] = df_courses['Trainer_ID'].apply(lambda x: trainer_names.get(x, 'غير مسند'))
-            
             df_courses['ID'] = df_courses.index
-            st.dataframe(df_courses[['ID', 'Name', 'Status', 'Trainer_Name', 'Date', 'Location']], use_container_width=True, hide_index=True)
+            
+            # 3. 🛡️ التأمين ضد الأعمدة المفقودة
+            required_cols = ['ID', 'Name', 'Status', 'Trainer_Name', 'Date', 'Location']
+            df_display = df_courses.reindex(columns=required_cols)
+            
+            # 4. عرض DataFrame المؤمّن
+            st.dataframe(df_display, use_container_width=True, hide_index=True)
             course_ids = list(st.session_state['courses'].keys())
         else:
             st.info("لا توجد دورات حالياً. ابدأ بإضافة دورة جديدة من الأسفل.")
@@ -421,7 +427,8 @@ if st.session_state['logged_in']:
                 st.info("لا توجد دورات للحذف.")
 
     # ==========================================
-    # 3. قسم إدارة المدربين (تمت إضافة شروط الحماية من البيانات الفارغة)
+    # 3. قسم إدارة المدربين
+    # 🛑 تم تأمين هذا القسم باستخدام reindex 🛑
     # ==========================================
     elif menu == "👨‍🏫 إدارة المدربين":
         st.header("🧑‍🏫 إدارة ومتابعة المدربين")
@@ -431,7 +438,6 @@ if st.session_state['logged_in']:
         if st.session_state['trainers']:
             df_trainers = pd.DataFrame(st.session_state['trainers']).T
             
-            # يجب أن يكون القاموس موجوداً لإجراء الربط
             if st.session_state['courses']:
                 course_names = {k: v['Name'] for k, v in st.session_state['courses'].items()}
             else:
@@ -442,7 +448,12 @@ if st.session_state['logged_in']:
             df_trainers['Trainer_ID'] = df_trainers.index
             
             st.subheader("قائمة المدربين وحالة الإسناد")
-            st.dataframe(df_trainers[['Trainer_ID', 'Name', 'Specialty', 'Assigned_Course_Name']], use_container_width=True, hide_index=True)
+            
+            # 🛡️ تأمين الأعمدة لعرض المدربين
+            required_trainer_cols = ['Trainer_ID', 'Name', 'Specialty', 'Assigned_Course_Name']
+            df_trainers_display = df_trainers.reindex(columns=required_trainer_cols)
+            
+            st.dataframe(df_trainers_display, use_container_width=True, hide_index=True)
 
             st.markdown("---")
             
@@ -469,8 +480,12 @@ if st.session_state['logged_in']:
                             df_trainees_trainer['Trainee_ID'] = df_trainees_trainer.index
                             st.info(f"عدد المسجلين في دورة **{course_name}**: {len(df_trainees_trainer)} متدرب.")
                             
+                            # 🛡️ تأمين الأعمدة لعرض المتدربين المسجلين في دورة المدرب
+                            required_trainee_cols = ['Trainee_ID', 'Name', 'College', 'Type', 'National_ID']
+                            df_trainees_trainer_display = df_trainees_trainer.reindex(columns=required_trainee_cols)
+                            
                             st.dataframe(
-                                df_trainees_trainer[['Trainee_ID', 'Name', 'College', 'Type', 'National_ID']],
+                                df_trainees_trainer_display,
                                 use_container_width=True, 
                                 hide_index=True
                             )
@@ -486,19 +501,23 @@ if st.session_state['logged_in']:
             st.info("لا يوجد مدربون مضافون في النظام.")
     
     # ==========================================
-    # 4. قسم إدارة المتدربين المسجلين (صلاحية التعديل الكاملة)
+    # 4. قسم إدارة المتدربين المسجلين
+    # 🛑 تم تأمين هذا القسم باستخدام reindex 🛑
     # ==========================================
     elif menu == "👥 إدارة المتدربين المسجلين":
         st.header("👥 إدارة وتعديل بيانات المتدربين")
         st.markdown("تحكم كامل في بيانات المتدربين (الاسم، رقم الهوية، الكلية، الدورة المسجل بها، إلخ).")
         
-        # 🛑 التصحيح هنا: نتحقق من وجود المتدربين أولاً
         if st.session_state['trainees']:
             st.subheader("قائمة المتدربين المسجلين")
             df_trainees = pd.DataFrame(st.session_state['trainees']).T
             df_trainees['ID'] = df_trainees.index
             
-            st.dataframe(df_trainees[['ID', 'Name', 'National_ID', 'College', 'Course_Name', 'Date']], use_container_width=True, hide_index=True)
+            # 🛡️ تأمين الأعمدة لعرض المتدربين
+            required_trainees_view_cols = ['ID', 'Name', 'National_ID', 'College', 'Course_Name', 'Date']
+            df_trainees_display = df_trainees.reindex(columns=required_trainees_view_cols)
+            
+            st.dataframe(df_trainees_display, use_container_width=True, hide_index=True)
             trainee_ids = list(st.session_state['trainees'].keys())
         else:
             st.info("لا يوجد متدربون مسجلون.")
@@ -551,7 +570,7 @@ if st.session_state['logged_in']:
 
 
     # ==========================================
-    # 5. التقارير والإحصائيات والطباعة (المحدث)
+    # 5. التقارير والإحصائيات والطباعة 
     # ==========================================
     elif menu == "📈 التقارير والإحصائيات والطباعة":
         st.header("📊 تقارير الأداء والبيانات والطباعة")
@@ -585,7 +604,7 @@ if st.session_state['logged_in']:
             # تحميل المتدربين
             if st.session_state['trainees']:
                 df_full_trainees = pd.DataFrame(st.session_state['trainees']).T
-                df_full_trainees['ID'] = df_full_trainees.index # إضافة ID للملف
+                df_full_trainees['ID'] = df_full_trainees.index 
                 buffer = io.BytesIO()
                 df_full_trainees.to_csv(buffer, index=False, encoding='utf-8-sig') 
                 csv_trainees = buffer.getvalue()
@@ -613,7 +632,7 @@ if st.session_state['logged_in']:
                 col_dl3.download_button(
                     label="⬇️ تحميل بيانات الدورات", data=csv_courses, file_name='بيانات_الدورات.csv', mime='text/csv;charset=utf-8',)
 
-        # 🛑 قسم الطباعة المصحح (لحل مشكلة KeyError عند اختيار دورة محذوفة) 🛑
+        # قسم الطباعة
         with tab_print:
             st.subheader("إعداد تقرير تفصيلي لدورة للطباعة")
             
@@ -636,7 +655,7 @@ if st.session_state['logged_in']:
                     
                     st.info("التقرير جاهز. اضغط **Ctrl+P** أو **Cmd+P** لطباعة الصفحة.")
                     
-                    # 📄 محتوى التقرير 
+                    # محتوى التقرير 
                     st.markdown(f"""
                     <div style="direction: rtl; padding: 20px; border: 1px solid #ddd; border-radius: 10px; margin-top: 20px; background-color: #ffffff;">
                         <h2 style="color: #CDA434; text-align: center; border-bottom: 2px solid #CDA434; padding-bottom: 10px;">
@@ -687,7 +706,6 @@ if st.session_state['logged_in']:
         st.header("🔍 التدقيق اليومي للمرافق والبرامج")
         st.markdown("املأ هذا النموذج لرفع تقارير التدقيق الدورية.")
         
-        # ... (منطق التدقيق كما هو) ...
         with st.form("audit_form", clear_on_submit=True):
             col1, col2 = st.columns(2)
             with col1:
