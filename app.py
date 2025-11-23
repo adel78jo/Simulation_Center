@@ -64,7 +64,7 @@ st.set_page_config(
     page_icon="👨‍🏫" 
 )
 
-# 🎨 تصميم CSS جديد مستوحى من الشعارات
+# 🎨 تصميم CSS (بدون تغيير عن الإصدار الأخير)
 st.markdown("""
 <style>
     /* دعم الاتجاه من اليمين لليسار بشكل كامل */
@@ -219,7 +219,8 @@ if st.session_state['logged_in']:
     # ---------------------------------------------
     
     # --- القائمة الجانبية للتنقل (تظهر فقط بعد الدخول) ---
-    st.sidebar.image("download-removebg-preview (1).png", width=120) # شعار الجامعة
+    # 🌟 تم استبدال اسم الملف برابط URL لشعار الجامعة
+    st.sidebar.image("https://i.ibb.co/C07k31j/download-removebg-preview-1.png", width=120) 
     st.sidebar.markdown("## شعبة التدريب والتطوير")
     st.sidebar.markdown("### مركز النمذجة والمحاكاة")
     st.sidebar.markdown("---")
@@ -237,8 +238,8 @@ if st.session_state['logged_in']:
     # 1. لوحة التحكم (الصفحة الرئيسية الجديدة)
     # ==========================================
     if menu == "🏠 لوحة التحكم":
-        # شعار المركز - صورة 2
-        st.image("logo.jpg", width=200) 
+        # 🌟 تم استبدال اسم الملف برابط URL لشعار المركز
+        st.image("https://i.ibb.co/L5Q2j85/simulation.jpg", width=200) 
         st.title("لوحة التحكم الرئيسية للمركز")
         st.subheader("مرحباً بك، مدير النظام. ملخص بيانات شعبة التدريب")
         
@@ -475,7 +476,6 @@ if st.session_state['logged_in']:
                         u_course_id = st.selectbox("الدورة الجديدة", options=course_ids, format_func=lambda x: course_list[x], index=course_ids.index(current_data['Course_ID']))
                         
                         if st.form_submit_button("حفظ تعديلات المتدرب"):
-                            # 🛑 تم تصحيح الخطأ هنا 
                             st.session_state['trainees'][trainee_to_update]['Name'] = u_name
                             st.session_state['trainees'][trainee_to_update]['College'] = u_college
                             st.session_state['trainees'][trainee_to_update]['Course_ID'] = u_course_id
