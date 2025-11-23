@@ -105,20 +105,18 @@ st.markdown("""
         background-color: var(--sidebar-bg);
         color: var(--sidebar-text);
         box-shadow: 2px 0 15px rgba(0, 0, 0, 0.08); /* ظل أوضح */
-        width: 300px !important; /* زيادة عرض الشريط الجانبي */
+        min-width: 300px !important; /* زيادة عرض الشريط الجانبي */
+        max-width: 300px !important;
     }
-    .sidebar .stRadio > label {
+    .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2 { /* targeting radio buttons in sidebar */
         font-size: 1.1em; /* حجم خط أكبر لعناصر القائمة */
         font-weight: 600;
         color: var(--sidebar-text);
         padding: 8px 0;
     }
-    .sidebar .stRadio > label:hover {
+    .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2:hover {
         background-color: #d6f5d6; /* خلفية خفيفة عند المرور */
         border-radius: 5px;
-    }
-    .sidebar .stRadio > label[data-baseweb="radio"] {
-        padding: 10px; /* مسافة داخلية أكبر */
     }
 
     /* الأزرار (Primary Action) */
@@ -168,8 +166,8 @@ st.markdown("""
     /* حقول الإدخال والنصوص - وضوح وجمالية */
     .stTextInput>div>div>input, .stSelectbox>div>div, .stTextArea>div>div {
         border: 1px solid #ccc;
-        border-radius: 8px;
-        padding: 10px 15px;
+        border-radius: 10px; /* حواف أكثر دائرية للخانات */
+        padding: 12px 15px;
         font-size: 1.05em; /* خط أوضح */
     }
     .stSelectbox>div>div {
@@ -221,7 +219,7 @@ if st.session_state['logged_in']:
     # ---------------------------------------------
     
     # --- القائمة الجانبية للتنقل (تظهر فقط بعد الدخول) ---
-    st.sidebar.image("https://www.aabu.edu.jo/sites/AABU/Main/SiteAssets/logo.png", width=120) # شعار الجامعة
+    st.sidebar.image("download-removebg-preview (1).png", width=120) # شعار الجامعة
     st.sidebar.markdown("## شعبة التدريب والتطوير")
     st.sidebar.markdown("### مركز النمذجة والمحاكاة")
     st.sidebar.markdown("---")
@@ -240,7 +238,7 @@ if st.session_state['logged_in']:
     # ==========================================
     if menu == "🏠 لوحة التحكم":
         # شعار المركز - صورة 2
-        st.image("https://i.ibb.co/L5Q2j85/simulation.jpg", width=200) # استخدام شعار المركز هنا
+        st.image("logo.jpg", width=200) 
         st.title("لوحة التحكم الرئيسية للمركز")
         st.subheader("مرحباً بك، مدير النظام. ملخص بيانات شعبة التدريب")
         
@@ -400,7 +398,7 @@ if st.session_state['logged_in']:
         if st.session_state['trainees']:
             df_trainees = pd.DataFrame(st.session_state['trainees']).T
             course_counts = df_trainees['Course_Name'].value_counts()
-            st.bar_chart(course_counts, color="#FFD700") # استخدام الأصفر
+            st.bar_chart(course_counts, color="#FFD700") # استخدام الأصفر من الشعار
             
         st.markdown("---")
         
@@ -477,8 +475,9 @@ if st.session_state['logged_in']:
                         u_course_id = st.selectbox("الدورة الجديدة", options=course_ids, format_func=lambda x: course_list[x], index=course_ids.index(current_data['Course_ID']))
                         
                         if st.form_submit_button("حفظ تعديلات المتدرب"):
+                            # 🛑 تم تصحيح الخطأ هنا 
                             st.session_state['trainees'][trainee_to_update]['Name'] = u_name
-                            st.session_state['trainee`s'][trainee_to_update]['College'] = u_college
+                            st.session_state['trainees'][trainee_to_update]['College'] = u_college
                             st.session_state['trainees'][trainee_to_update]['Course_ID'] = u_course_id
                             st.session_state['trainees'][trainee_to_update]['Course_Name'] = course_list[u_course_id]
                             st.success(f"✅ تم تحديث بيانات المتدرب **{u_name}** بنجاح.")
@@ -519,5 +518,51 @@ if st.session_state['logged_in']:
                     audit_to_update = st.selectbox("اختر التقرير للتعديل", options=audit_ids, format_func=lambda x: f"#{x} - {st.session_state['audit_logs'][x]['Lab']}", key="update_a_select_admin")
                     current_data = st.session_state['audit_logs'][audit_to_update]
                     
-                    with st.form("update_audit_admin_form"):
-                        u_status = st.selectbox("حالة التدقيق", ["ممتاز", "⚠️ يحتاج متابعة فور
+                    with st.form("update_audit_admin_form_audit"):
+                        u_status = st.selectbox("حالة التدقيق", ["ممتاز", "⚠️ يحتاج متابعة فورية"], index=["ممتاز", "⚠️ يحتاج متابعة فورية"].index(current_data['Status']), key="u_status_audit")
+                        u_notes = st.text_area("تعديل الملاحظات", value=current_data['Notes'], key="u_notes_audit")
+                        
+                        if st.form_submit_button("حفظ تعديلات التقرير"):
+                            st.session_state['audit_logs'][audit_to_update]['Status'] = u_status
+                            st.session_state['audit_logs'][audit_to_update]['Notes'] = u_notes
+                            st.success(f"✅ تم تحديث التقرير #{audit_to_update} بنجاح.")
+                else:
+                    st.info("لا توجد تقارير للتعديل.")
+
+            # حذف تقرير تدقيق
+            with col_a2.expander("🗑️ حذف تقرير"):
+                if audit_ids:
+                    audit_to_delete = st.selectbox("اختر التقرير للحذف", options=audit_ids, format_func=lambda x: f"#{x} - {st.session_state['audit_logs'][x]['Lab']}", key="delete_a_select_admin")
+                    if st.button("تأكيد حذف التقرير", key="delete_a_btn_admin"):
+                        deleted_lab = st.session_state['audit_logs'][audit_to_delete]['Lab']
+                        if delete_item(st.session_state['audit_logs'], audit_to_delete):
+                            st.success(f"🗑️ تم حذف التقرير الخاص بـ **{deleted_lab}** نهائياً.")
+                else:
+                    st.info("لا توجد تقارير للحذف.")
+
+
+else:
+    # ---------------------------------------------
+    # شاشة تسجيل الدخول (إذا لم يتم تسجيل الدخول) - آمنة
+    # ---------------------------------------------
+    st.title("🔐 بوابة الوصول المقيد")
+    st.subheader("الوصول إلى لوحة التحكم يقتصر على مديري النظام المصرح لهم فقط.")
+    
+    st.sidebar.info("الرجاء تسجيل الدخول للمتابعة.")
+
+    login_col1, login_col2 = st.columns([1, 1]) 
+    
+    with login_col1:
+        with st.form("login_form"):
+            username = st.text_input("اسم المستخدم")
+            password = st.text_input("كلمة المرور", type="password")
+            
+            if st.form_submit_button("🔑 تسجيل الدخول"):
+                login_user(username, password)
+    
+    with login_col2:
+        # رسالة توجيهية عامة ومحايدة
+        st.info("""
+        **مركز النمذجة والمحاكاة - جامعة آل البيت:**
+        نحن ملتزمون بتوفير بيئة تدريب وتطوير عالية الجودة.
+        """)
