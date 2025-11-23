@@ -64,7 +64,7 @@ st.set_page_config(
     page_icon="👨‍🏫" 
 )
 
-# 🎨 تصميم CSS (بدون تغيير)
+# 🎨 تصميم CSS (تم إضافة تصميم خاص للشعارين)
 st.markdown("""
 <style>
     /* دعم الاتجاه من اليمين لليسار بشكل كامل */
@@ -74,49 +74,39 @@ st.markdown("""
         font-family: 'Tahoma', 'Arial', sans-serif;
     }
     
-    /* الألوان الأساسية المستوحاة من الشعارين */
+    /* الألوان الأساسية */
     :root {
-        --primary-green: #008000; /* أخضر داكن من شعار الجامعة */
-        --accent-yellow: #FFD700; /* أصفر من شعار المركز */
-        --accent-blue: #007bff;   /* أزرق من شعار المركز */
-        --accent-red: #dc3545;    /* أحمر من شعار المركز */
+        --primary-green: #008000;
+        --accent-yellow: #FFD700;
+        --accent-blue: #007bff;   
         --dark-text: #212121;
-        --light-bg: #f9fbfd;      /* خلفية فاتحة جداً */
-        --sidebar-bg: #e6ffe6;    /* خلفية أخضر فاتح جداً للشريط الجانبي */
-        --sidebar-text: #004d00;  /* أخضر داكن لنصوص الشريط الجانبي */
+        --light-bg: #f9fbfd;
+        --sidebar-bg: #e6ffe6;
+        --sidebar-text: #004d00;
     }
 
     /* العناوين والتأكيد */
     h1, h2, h3, h4 {
         color: var(--primary-green);
-        border-bottom: 2px solid #e0ffe0; /* خط فاصل أخضر فاتح */
-        padding-bottom: 8px; /* مسافة أكبر */
+        border-bottom: 2px solid #e0ffe0;
+        padding-bottom: 8px;
         margin-top: 25px;
         font-weight: bold;
     }
     
-    /* زيادة حجم خطوط العناوين */
-    h1 { font-size: 2.8em; }
-    h2 { font-size: 2.2em; }
-    h3 { font-size: 1.8em; }
-
     /* الشريط الجانبي - قائمة أكبر وخطوط أوضح */
     [data-testid="stSidebar"] {
         background-color: var(--sidebar-bg);
         color: var(--sidebar-text);
-        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.08); /* ظل أوضح */
-        min-width: 300px !important; /* زيادة عرض الشريط الجانبي */
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.08);
+        min-width: 300px !important;
         max-width: 300px !important;
     }
-    .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2 { /* targeting radio buttons in sidebar */
-        font-size: 1.1em; /* حجم خط أكبر لعناصر القائمة */
+    .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2 {
+        font-size: 1.1em;
         font-weight: 600;
         color: var(--sidebar-text);
         padding: 8px 0;
-    }
-    .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2:hover {
-        background-color: #d6f5d6; /* خلفية خفيفة عند المرور */
-        border-radius: 5px;
     }
 
     /* الأزرار (Primary Action) */
@@ -124,88 +114,33 @@ st.markdown("""
         background-color: var(--primary-green);
         color: white;
         border: none;
-        border-radius: 10px; /* حواف أكثر ليونة */
-        padding: 12px 25px; /* أزرار أكبر وأوضح */
+        border-radius: 10px;
+        padding: 12px 25px;
         font-weight: bold;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         transition: background-color 0.3s ease;
         font-size: 1.05em;
     }
     .stButton>button:hover {
-        background-color: var(--accent-yellow); /* تأثير عند المرور */
+        background-color: var(--accent-yellow);
         color: var(--dark-text);
     }
     
-    /* بطاقات الإحصائيات (Metrics) - تصميم جديد */
+    /* بطاقات الإحصائيات (Metrics) */
     [data-testid="stMetric"] {
         background-color: white;
-        border-left: 6px solid var(--accent-blue); /* شريط أزرق مميز */
-        border-radius: 15px; /* حواف دائرية أكبر */
+        border-left: 6px solid var(--accent-blue);
+        border-radius: 15px;
         padding: 20px;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        text-align: right;
-        margin-bottom: 15px; /* تباعد أفضل بين البطاقات */
-    }
-    [data-testid="stMetricLabel"] {
-        font-size: 1.1em;
-        color: #555; /* رمادي متوسط للوصف */
-        font-weight: 600;
     }
     [data-testid="stMetricValue"] {
-        font-size: 3em; /* قيمة أكبر */
+        font-size: 3em;
         color: var(--primary-green);
         font-weight: bolder;
-        margin-top: 5px;
-    }
-    [data-testid="stMetricDelta"] {
-        font-size: 0.9em;
-        font-weight: bold;
-        margin-top: 10px;
     }
 
-    /* حقول الإدخال والنصوص - وضوح وجمالية */
-    .stTextInput>div>div>input, .stSelectbox>div>div, .stTextArea>div>div {
-        border: 1px solid #ccc;
-        border-radius: 10px; /* حواف أكثر دائرية للخانات */
-        padding: 12px 15px;
-        font-size: 1.05em; /* خط أوضح */
-    }
-    .stSelectbox>div>div {
-        background-color: white;
-    }
-
-    /* الجداول (DataFrames) والحاويات */
-    .stDataFrame, .stContainer {
-        border-radius: 10px;
-        border: 1px solid #e0ffe0; /* إطار أخضر فاتح */
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-    .stExpander {
-        border: 1px solid #e0ffe0;
-        border-radius: 10px;
-        margin-bottom: 15px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-    .stExpander button {
-        background-color: #f0fff0 !important; /* خلفية فاتحة لعنوان الموسع */
-        color: var(--primary-green) !important;
-        font-weight: bold;
-        border-radius: 10px;
-        padding: 10px;
-    }
-
-    /* رسائل التنبيه */
-    .stAlert {
-        border-radius: 10px;
-        padding: 15px;
-        font-size: 1.1em;
-    }
-    .stAlert.success { background-color: #e6ffe6; color: #006400; } /* أخضر نجاح */
-    .stAlert.error { background-color: #ffe6e6; color: #cc0000; } /* أحمر خطأ */
-    .stAlert.warning { background-color: #fffacd; color: #a38c00; } /* أصفر تحذير */
-    .stAlert.info { background-color: #e0f2f7; color: #006064; } /* أزرق معلومات */
-    
-    /* تنسيق خاص للشعارين باستخدام HTML */
+    /* تنسيق خاص للشعارين باستخدام HTML (لضمان الظهور) */
     .logo-container {
         text-align: center;
         margin-bottom: 20px;
@@ -239,10 +174,10 @@ if st.session_state['logged_in']:
     # ---------------------------------------------
     
     # --- القائمة الجانبية للتنقل (تظهر فقط بعد الدخول) ---
-    # 🌟 استخدام HTML لتضمين الشعار الأول
+    # 🌟 استخدام HTML لتضمين الشعار الأول (aabu_logo.png)
     st.sidebar.markdown(f"""
     <div class="logo-container">
-        <img src="download-removebg-preview (1).png" class="logo-image-sidebar">
+        <img src="aabu_logo.png" class="logo-image-sidebar">
     </div>
     """, unsafe_allow_html=True)
     
@@ -263,10 +198,10 @@ if st.session_state['logged_in']:
     # 1. لوحة التحكم (الصفحة الرئيسية الجديدة)
     # ==========================================
     if menu == "🏠 لوحة التحكم":
-        # 🌟 استخدام HTML لتضمين الشعار الثاني
+        # 🌟 استخدام HTML لتضمين الشعار الثاني (simulation_logo.jpg)
         st.markdown(f"""
         <div class="logo-container">
-            <img src="logo.jpg" class="logo-image-main">
+            <img src="simulation_logo.jpg" class="logo-image-main">
         </div>
         """, unsafe_allow_html=True)
         
@@ -297,7 +232,7 @@ if st.session_state['logged_in']:
             college_counts = df_trainees['College'].value_counts()
             
             with chart_col:
-                st.bar_chart(college_counts, color="#007bff") # استخدام الأزرق من الشعار
+                st.bar_chart(college_counts, color="#007bff") 
             
             with data_col:
                 with st.expander("جدول البيانات التفصيلي"):
@@ -429,7 +364,7 @@ if st.session_state['logged_in']:
         if st.session_state['trainees']:
             df_trainees = pd.DataFrame(st.session_state['trainees']).T
             course_counts = df_trainees['Course_Name'].value_counts()
-            st.bar_chart(course_counts, color="#FFD700") # استخدام الأصفر من الشعار
+            st.bar_chart(course_counts, color="#FFD700") 
             
         st.markdown("---")
         
