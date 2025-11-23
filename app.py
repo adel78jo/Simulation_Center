@@ -562,7 +562,8 @@ if st.session_state['logged_in']:
             
             st.subheader("تفقد قائمة المسجلين لكل مدرب")
             
-            trainer_options_keys = [f"#{id} - {data['Name']} ({data['Specialty']})": id for id, data in st.session_state['trainers'].items()]
+            # 🛑 التصحيح هنا: استخدام الأقواس المعقوفة {} لإنشاء قاموس (Dict Comprehension)
+            trainer_options_keys = {f"#{id} - {data['Name']} ({data['Specialty']})": id for id, data in st.session_state['trainers'].items()}
             
             if trainer_options_keys:
                 selected_trainer_key_name = st.selectbox("اختر المدرب لعرض تفاصيل دوره:", options=list(trainer_options_keys.keys()), key="select_trainer_for_view")
