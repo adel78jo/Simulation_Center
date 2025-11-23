@@ -64,7 +64,7 @@ st.set_page_config(
     page_icon="👨‍🏫" 
 )
 
-# 🎨 تصميم CSS جديد (الأزرق الملكي الداكن)
+# 🎨 تصميم CSS جديد مستوحى من الشعارات
 st.markdown("""
 <style>
     /* دعم الاتجاه من اليمين لليسار بشكل كامل */
@@ -74,72 +74,139 @@ st.markdown("""
         font-family: 'Tahoma', 'Arial', sans-serif;
     }
     
-    /* الألوان الأساسية */
+    /* الألوان الأساسية المستوحاة من الشعارين */
     :root {
-        --primary-color: #1A237E; /* أزرق ملكي داكن */
-        --secondary-color: #5C6BC0; /* أزرق فاتح متباين */
-        --text-color: #212121;
-        --background-color: #f7f9fc; /* خلفية رمادية فاتحة جداً */
+        --primary-green: #008000; /* أخضر داكن من شعار الجامعة */
+        --accent-yellow: #FFD700; /* أصفر من شعار المركز */
+        --accent-blue: #007bff;   /* أزرق من شعار المركز */
+        --accent-red: #dc3545;    /* أحمر من شعار المركز */
+        --dark-text: #212121;
+        --light-bg: #f9fbfd;      /* خلفية فاتحة جداً */
+        --sidebar-bg: #e6ffe6;    /* خلفية أخضر فاتح جداً للشريط الجانبي */
+        --sidebar-text: #004d00;  /* أخضر داكن لنصوص الشريط الجانبي */
     }
 
     /* العناوين والتأكيد */
     h1, h2, h3, h4 {
-        color: var(--primary-color);
-        border-bottom: 2px solid #E0E0E0; /* خط فاصل خفيف */
-        padding-bottom: 5px;
-        margin-top: 15px;
+        color: var(--primary-green);
+        border-bottom: 2px solid #e0ffe0; /* خط فاصل أخضر فاتح */
+        padding-bottom: 8px; /* مسافة أكبر */
+        margin-top: 25px;
+        font-weight: bold;
     }
+    
+    /* زيادة حجم خطوط العناوين */
+    h1 { font-size: 2.8em; }
+    h2 { font-size: 2.2em; }
+    h3 { font-size: 1.8em; }
 
-    /* الشريط الجانبي (لجعل المحتوى الداخلي داكناً ومميزاً) */
+    /* الشريط الجانبي - قائمة أكبر وخطوط أوضح */
     [data-testid="stSidebar"] {
-        background-color: #e8eaf6; /* خلفية أزرق فاتح جداً */
-        color: var(--primary-color);
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        background-color: var(--sidebar-bg);
+        color: var(--sidebar-text);
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.08); /* ظل أوضح */
+        width: 300px !important; /* زيادة عرض الشريط الجانبي */
     }
-    .st-ag .st-bh {
-        color: var(--primary-color) !important; /* لون النصوص في الشريط الجانبي */
+    .sidebar .stRadio > label {
+        font-size: 1.1em; /* حجم خط أكبر لعناصر القائمة */
+        font-weight: 600;
+        color: var(--sidebar-text);
+        padding: 8px 0;
+    }
+    .sidebar .stRadio > label:hover {
+        background-color: #d6f5d6; /* خلفية خفيفة عند المرور */
+        border-radius: 5px;
+    }
+    .sidebar .stRadio > label[data-baseweb="radio"] {
+        padding: 10px; /* مسافة داخلية أكبر */
     }
 
     /* الأزرار (Primary Action) */
     .stButton>button {
-        background-color: var(--primary-color);
+        background-color: var(--primary-green);
         color: white;
         border: none;
-        border-radius: 8px; /* حواف أكثر ليونة */
-        padding: 10px 20px;
+        border-radius: 10px; /* حواف أكثر ليونة */
+        padding: 12px 25px; /* أزرار أكبر وأوضح */
         font-weight: bold;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         transition: background-color 0.3s ease;
+        font-size: 1.05em;
     }
     .stButton>button:hover {
-        background-color: var(--secondary-color);
-    }
-
-    /* تصميم بطاقات الإحصائيات (Metrics) */
-    [data-testid="stMetric"] {
-        background-color: white; /* خلفية بيضاء نقية */
-        border-left: 5px solid var(--secondary-color); /* شريط جانبي ملون للتمييز */
-        border-radius: 12px;
-        padding: 15px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* ظل احترافي خفيف */
-        text-align: right;
-    }
-    [data-testid="stMetricLabel"] {
-        font-size: 1em;
-        color: #616161; /* رمادي غامق للوصف */
-        font-weight: 500;
-    }
-    [data-testid="stMetricValue"] {
-        font-size: 2.5em; /* تصغير حجم الرقم قليلاً ليكون أكثر احترافية */
-        color: var(--primary-color);
-        font-weight: bolder;
+        background-color: var(--accent-yellow); /* تأثير عند المرور */
+        color: var(--dark-text);
     }
     
-    /* الـ DataFrames والحاويات */
-    .stDataFrame, .stContainer {
-        border-radius: 8px;
-        border: 1px solid #E0E0E0;
+    /* بطاقات الإحصائيات (Metrics) - تصميم جديد */
+    [data-testid="stMetric"] {
+        background-color: white;
+        border-left: 6px solid var(--accent-blue); /* شريط أزرق مميز */
+        border-radius: 15px; /* حواف دائرية أكبر */
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        text-align: right;
+        margin-bottom: 15px; /* تباعد أفضل بين البطاقات */
     }
+    [data-testid="stMetricLabel"] {
+        font-size: 1.1em;
+        color: #555; /* رمادي متوسط للوصف */
+        font-weight: 600;
+    }
+    [data-testid="stMetricValue"] {
+        font-size: 3em; /* قيمة أكبر */
+        color: var(--primary-green);
+        font-weight: bolder;
+        margin-top: 5px;
+    }
+    [data-testid="stMetricDelta"] {
+        font-size: 0.9em;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    /* حقول الإدخال والنصوص - وضوح وجمالية */
+    .stTextInput>div>div>input, .stSelectbox>div>div, .stTextArea>div>div {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-size: 1.05em; /* خط أوضح */
+    }
+    .stSelectbox>div>div {
+        background-color: white;
+    }
+
+    /* الجداول (DataFrames) والحاويات */
+    .stDataFrame, .stContainer {
+        border-radius: 10px;
+        border: 1px solid #e0ffe0; /* إطار أخضر فاتح */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    .stExpander {
+        border: 1px solid #e0ffe0;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .stExpander button {
+        background-color: #f0fff0 !important; /* خلفية فاتحة لعنوان الموسع */
+        color: var(--primary-green) !important;
+        font-weight: bold;
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    /* رسائل التنبيه */
+    .stAlert {
+        border-radius: 10px;
+        padding: 15px;
+        font-size: 1.1em;
+    }
+    .stAlert.success { background-color: #e6ffe6; color: #006400; } /* أخضر نجاح */
+    .stAlert.error { background-color: #ffe6e6; color: #cc0000; } /* أحمر خطأ */
+    .stAlert.warning { background-color: #fffacd; color: #a38c00; } /* أصفر تحذير */
+    .stAlert.info { background-color: #e0f2f7; color: #006064; } /* أزرق معلومات */
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -154,14 +221,15 @@ if st.session_state['logged_in']:
     # ---------------------------------------------
     
     # --- القائمة الجانبية للتنقل (تظهر فقط بعد الدخول) ---
-    st.sidebar.markdown("# 🏛️ جامعة آل البيت")
+    st.sidebar.image("https://www.aabu.edu.jo/sites/AABU/Main/SiteAssets/logo.png", width=120) # شعار الجامعة
     st.sidebar.markdown("## شعبة التدريب والتطوير")
+    st.sidebar.markdown("### مركز النمذجة والمحاكاة")
     st.sidebar.markdown("---")
     
     # تحديد القائمة
     menu = st.sidebar.radio(
         "القائمة الرئيسية:",
-        ("🏠 لوحة التحكم", "📚 إدارة الدورات", "🔍 التدقيق والمتابعة", "📊 التقارير والإحصائيات", "🔑 إدارة النظام الكاملة")
+        ("🏠 لوحة التحكم", "📚 إدارة الدورات", "🔍 التدقيق والمتابعة", "📊 التقارير والإحصائيات", "🔑 أدوات الإدارة المتقدمة")
     )
     st.sidebar.markdown("---")
     st.sidebar.button("🔐 تسجيل الخروج", on_click=logout_user)
@@ -171,9 +239,10 @@ if st.session_state['logged_in']:
     # 1. لوحة التحكم (الصفحة الرئيسية الجديدة)
     # ==========================================
     if menu == "🏠 لوحة التحكم":
-        st.image("https://www.aabu.edu.jo/sites/AABU/Main/SiteAssets/logo.png", width=100)
-        st.title("لوحة التحكم الرئيسية")
-        st.subheader("مرحباً بك، مدير النظام. ملخص بيانات المركز")
+        # شعار المركز - صورة 2
+        st.image("https://i.ibb.co/L5Q2j85/simulation.jpg", width=200) # استخدام شعار المركز هنا
+        st.title("لوحة التحكم الرئيسية للمركز")
+        st.subheader("مرحباً بك، مدير النظام. ملخص بيانات شعبة التدريب")
         
         st.markdown("---")
         
@@ -199,7 +268,7 @@ if st.session_state['logged_in']:
             college_counts = df_trainees['College'].value_counts()
             
             with chart_col:
-                st.bar_chart(college_counts, color="#5C6BC0")
+                st.bar_chart(college_counts, color="#007bff") # استخدام الأزرق من الشعار
             
             with data_col:
                 with st.expander("جدول البيانات التفصيلي"):
@@ -221,7 +290,7 @@ if st.session_state['logged_in']:
     # 2. قسم إدارة الدورات 
     # ==========================================
     elif menu == "📚 إدارة الدورات":
-        st.header("📝 تسجيل الدورات وتفاصيلها")
+        st.header("📝 إدارة الدورات التدريبية")
         st.markdown("هذا القسم مخصص لإضافة وحذف الدورات المتاحة والتعديل على حالة التسجيل.")
         
         if st.session_state['courses']:
@@ -331,7 +400,7 @@ if st.session_state['logged_in']:
         if st.session_state['trainees']:
             df_trainees = pd.DataFrame(st.session_state['trainees']).T
             course_counts = df_trainees['Course_Name'].value_counts()
-            st.bar_chart(course_counts)
+            st.bar_chart(course_counts, color="#FFD700") # استخدام الأصفر
             
         st.markdown("---")
         
@@ -368,7 +437,7 @@ if st.session_state['logged_in']:
     # ==========================================
     # 5. إدارة النظام الكاملة (التحكم بالحذف والتعديل المتقدم)
     # ==========================================
-    elif menu == "🔑 إدارة النظام الكاملة":
+    elif menu == "🔑 أدوات الإدارة المتقدمة":
         st.title("🔑 أدوات الإدارة المتقدمة")
         st.error("تنبيه: هذا القسم يتيح حذف المتدربين وتقارير التدقيق. استخدمه بحذر شديد.")
         
@@ -409,7 +478,7 @@ if st.session_state['logged_in']:
                         
                         if st.form_submit_button("حفظ تعديلات المتدرب"):
                             st.session_state['trainees'][trainee_to_update]['Name'] = u_name
-                            st.session_state['trainees'][trainee_to_update]['College'] = u_college
+                            st.session_state['trainee`s'][trainee_to_update]['College'] = u_college
                             st.session_state['trainees'][trainee_to_update]['Course_ID'] = u_course_id
                             st.session_state['trainees'][trainee_to_update]['Course_Name'] = course_list[u_course_id]
                             st.success(f"✅ تم تحديث بيانات المتدرب **{u_name}** بنجاح.")
@@ -451,49 +520,4 @@ if st.session_state['logged_in']:
                     current_data = st.session_state['audit_logs'][audit_to_update]
                     
                     with st.form("update_audit_admin_form"):
-                        u_status = st.selectbox("حالة التدقيق", ["ممتاز", "⚠️ يحتاج متابعة فورية"], index=["ممتاز", "⚠️ يحتاج متابعة فورية"].index(current_data['Status']))
-                        u_notes = st.text_area("تعديل الملاحظات", value=current_data['Notes'])
-                        
-                        if st.form_submit_button("حفظ تعديلات التقرير"):
-                            st.session_state['audit_logs'][audit_to_update]['Status'] = u_status
-                            st.session_state['audit_logs'][audit_to_update]['Notes'] = u_notes
-                            st.success(f"✅ تم تحديث التقرير #{audit_to_update} بنجاح.")
-                else:
-                    st.info("لا توجد تقارير للتعديل.")
-
-            # حذف تقرير تدقيق
-            with col_a2.expander("🗑️ حذف تقرير"):
-                if audit_ids:
-                    audit_to_delete = st.selectbox("اختر التقرير للحذف", options=audit_ids, format_func=lambda x: f"#{x} - {st.session_state['audit_logs'][x]['Lab']}", key="delete_a_select_admin")
-                    if st.button("تأكيد حذف التقرير", key="delete_a_btn_admin"):
-                        deleted_lab = st.session_state['audit_logs'][audit_to_delete]['Lab']
-                        if delete_item(st.session_state['audit_logs'], audit_to_delete):
-                            st.success(f"🗑️ تم حذف التقرير الخاص بـ **{deleted_lab}** نهائياً.")
-                else:
-                    st.info("لا توجد تقارير للحذف.")
-
-
-else:
-    # ---------------------------------------------
-    # شاشة تسجيل الدخول (إذا لم يتم تسجيل الدخول) - آمنة
-    # ---------------------------------------------
-    st.title("🔐 بوابة الوصول المقيد")
-    st.subheader("هذا التطبيق قيد التطوير. الرجاء تسجيل الدخول للمتابعة.")
-    
-    st.sidebar.info("للوصول إلى محتوى التطوير، يرجى تسجيل الدخول.")
-
-    login_col1, login_col2 = st.columns([1, 1]) 
-    
-    with login_col1:
-        with st.form("login_form"):
-            username = st.text_input("اسم المستخدم")
-            password = st.text_input("كلمة المرور", type="password")
-            
-            if st.form_submit_button("🔑 تسجيل الدخول"):
-                login_user(username, password)
-    
-    with login_col2:
-        st.info("""
-        **🔐 الوصول المقيد:**
-        الوصول إلى لوحة التحكم يقتصر على مديري النظام المصرح لهم فقط.
-        """)
+                        u_status = st.selectbox("حالة التدقيق", ["ممتاز", "⚠️ يحتاج متابعة فور
