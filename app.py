@@ -71,7 +71,7 @@ st.set_page_config(
     page_icon="⚙️" 
 )
 
-# 💎 تصميم CSS الفاخر (Dark Tech UI)
+# 💎 تصميم CSS الفاخر (Dark/Gold Theme - مستوحى من الشعار)
 st.markdown("""
 <style>
     /* دعم الاتجاه من اليمين لليسار بشكل كامل */
@@ -81,15 +81,15 @@ st.markdown("""
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
-    /* الألوان الأساسية - سمة داكنة (Dark Tech UI) */
+    /* الألوان الأساسية - سمة داكنة ذهبية (Dark Gold UI) */
     :root {
-        --primary-dark: #121212;       /* خلفية أساسية داكنة جداً */
-        --secondary-dark: #1F1F1F;     /* خلفية ثانوية (مثل البطاقات) */
-        --primary-blue: #0077CC;       /* أزرق تقني كلاسيكي */
-        --accent-gold: #B8860B;        /* ذهبي/نحاسي للمسات الفاخرة */
-        --text-light: #E0E0E0;         /* لون النص الفاتح */
-        --text-muted: #A0A0A0;         /* لون النص الثانوي */
-        --border-color: #333333;       /* لون الحدود الداكن */
+        --primary-dark: #121212;        /* خلفية أساسية داكنة جداً (أسود) */
+        --secondary-dark: #1F1F1F;      /* خلفية ثانوية (مثل البطاقات) */
+        --accent-gold: #FFC300;         /* لون ذهبي فاتح (للتأكيد والتمييز) */
+        --deep-gold: #B8860B;           /* لون ذهبي نحاسي (الرئيسي) - مستوحى من الشعار */
+        --text-light: #F0F0F0;          /* لون النص الفاتح */
+        --text-muted: #A0A0A0;          /* لون النص الثانوي */
+        --border-color: #333333;        /* لون الحدود الداكن */
         --glass-bg: rgba(31, 31, 31, 0.9); /* خلفية زجاجية شفافة للشريط الجانبي */
     }
 
@@ -106,7 +106,7 @@ st.markdown("""
 
     /* العناوين والتأكيد */
     h1, h2, h3, h4 {
-        color: var(--accent-gold); /* العناوين باللون الذهبي */
+        color: var(--accent-gold); /* العناوين باللون الذهبي اللامع */
         border-bottom: 1px solid var(--border-color);
         padding-bottom: 10px;
         margin-top: 30px;
@@ -119,12 +119,13 @@ st.markdown("""
     /* الشريط الجانبي (تأثير Glassmorphism) */
     [data-testid="stSidebar"] {
         background-color: var(--glass-bg);
-        backdrop-filter: blur(10px); /* تأثير التعتيم الزجاجي */
+        backdrop-filter: blur(10px); 
         border-right: 1px solid var(--border-color);
         box-shadow: 2px 0 20px rgba(0, 0, 0, 0.5); 
         min-width: 300px !important;
         max-width: 300px !important;
     }
+    /* تنسيق خيارات الراديو (القائمة الجانبية) */
     .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2 { 
         font-size: 1.15em;
         font-weight: 600;
@@ -132,69 +133,57 @@ st.markdown("""
         padding: 12px 15px;
         border-radius: 8px;
         transition: background-color 0.2s ease, border 0.2s ease;
-        border-left: 3px solid transparent; /* خط فاخر على اليسار */
+        border-left: 3px solid transparent; 
     }
     .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2:hover {
-        background-color: rgba(0, 119, 204, 0.1); 
-        border-left: 3px solid var(--primary-blue);
-        color: var(--primary-blue);
+        background-color: rgba(184, 134, 11, 0.1); /* ظل خفيف من الذهبي */
+        border-left: 3px solid var(--accent-gold); /* خط ذهبي عند التحويم */
+        color: var(--accent-gold);
     }
     .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2[aria-selected="true"] {
-        background-color: var(--accent-gold); /* تغيير الخلفية للذهبي عند الاختيار */
+        background-color: var(--deep-gold); /* الخلفية باللون الذهبي الداكن عند الاختيار */
         color: var(--primary-dark);
-        border-left: 3px solid var(--primary-dark); /* العنصر المختار بلون داكن */
+        border-left: 3px solid var(--primary-dark); 
         box-shadow: none;
     }
-    
-    /* ** مهم ** تلوين الأيقونات في القائمة الجانبية باللون الذهبي (مهم جداً مع الإيموجي) */
-    /* هذا التنسيق سيعمل على تلوين الأيقونات أو الإيموجي داخل زر الراديو */
-    .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2 span {
-        font-size: 1.2em;
-        margin-left: 10px;
-        filter: drop-shadow(0 0 1px #B8860B); /* ظل ذهبي خفيف للإيموجي */
-    }
-    .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2[aria-selected="true"] span {
-        filter: drop-shadow(0 0 1px #121212); /* ظل داكن للإيموجي عند الاختيار */
-    }
 
-
-    /* الأزرار (Primary Action) - تأثير معدني */
+    /* الأزرار (Primary Action) - تأثير ذهبي متدرج */
     .stButton>button {
-        background: linear-gradient(145deg, var(--primary-blue), #004D80);
-        color: white;
-        border: 1px solid var(--accent-gold);
+        background: linear-gradient(145deg, var(--accent-gold), var(--deep-gold));
+        color: var(--primary-dark); /* نص داكن على خلفية ذهبية */
+        border: 1px solid var(--text-light);
         border-radius: 8px;
         padding: 12px 25px;
         font-weight: 700;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         transition: all 0.3s ease;
         font-size: 1.0em;
         margin-top: 10px;
     }
     .stButton>button:hover {
-        background: linear-gradient(145deg, var(--accent-gold), #A0780A); /* يتغير للذهبي عند التحويم */
+        background: linear-gradient(145deg, #FFD700, #B8860B); 
         color: var(--primary-dark);
         transform: scale(1.02);
     }
     
-    /* بطاقات الإحصائيات (Metrics) - تصميم ثلاثي الأبعاد */
+    /* بطاقات الإحصائيات (Metrics) - تصميم ذهبي */
     [data-testid="stMetric"] {
         background-color: var(--secondary-dark);
-        border: 1px solid var(--border-color);
+        border: 1px solid var(--deep-gold); /* إطار ذهبي داكن */
         border-radius: 12px;
         padding: 25px;
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
         text-align: center;
         transition: transform 0.3s ease;
-        border-bottom: 3px solid var(--primary-blue); /* شريط أزرق سفلي */
+        border-bottom: 3px solid var(--accent-gold); /* شريط ذهبي لامع سفلي */
     }
     [data-testid="stMetric"]:hover {
         transform: translateY(-5px); 
-        border-bottom: 3px solid var(--accent-gold); /* يتحول للذهبي عند التحويم */
+        border-bottom: 3px solid var(--deep-gold); 
     }
     [data-testid="stMetricValue"] {
         font-size: 3.5em; 
-        color: var(--accent-gold); /* القيمة باللون الذهبي */
+        color: var(--accent-gold); /* القيمة باللون الذهبي اللامع */
         font-weight: bolder;
         margin-bottom: 5px;
     }
@@ -206,7 +195,7 @@ st.markdown("""
     [data-testid="stMetricDelta"] {
         font-size: 0.9em;
         font-weight: bold;
-        color: var(--primary-blue);
+        color: #00CC99; /* لون أخضر للزيادة */
     }
 
     /* تنسيق خاص للشعارين */
@@ -217,18 +206,18 @@ st.markdown("""
     }
     .logo-image-sidebar {
         width: 130px; 
-        filter: drop-shadow(0 0 5px rgba(0, 119, 204, 0.5)); /* ظل خفيف تقني */
+        filter: drop-shadow(0 0 5px rgba(255, 195, 0, 0.5)); /* ظل ذهبي خفيف */
         border-radius: 8px;
     }
     .logo-image-main {
         width: 250px;
-        filter: drop-shadow(0 0 10px rgba(0, 119, 204, 0.7));
+        filter: drop-shadow(0 0 10px rgba(255, 195, 0, 0.7));
         border-radius: 12px;
         margin-bottom: 40px; 
     }
     
-    /* تحسين تصميم النماذج والحقول والجداول */
-    .st-emotion-cache-czk5ad { /* Container for forms/expander content */
+    /* تحسين تصميم النماذج والجداول */
+    .st-emotion-cache-czk5ad { 
         background-color: var(--secondary-dark);
         border-radius: 10px;
         padding: 20px;
@@ -238,7 +227,7 @@ st.markdown("""
     }
     .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea>div>div>textarea {
         border-radius: 8px;
-        border: 1px solid var(--primary-blue);
+        border: 1px solid var(--deep-gold); /* إطار ذهبي للحقول */
         background-color: var(--primary-dark);
         color: var(--text-light);
         padding: 10px;
@@ -247,31 +236,6 @@ st.markdown("""
         font-weight: 700;
         color: var(--accent-gold);
         font-size: 1.1em;
-    }
-
-    /* تنسيق الجداول */
-    .st-emotion-cache-1ftrzg7 .stDataFrame {
-        border: 1px solid var(--border-color);
-        border-radius: 10px;
-    }
-    
-    /* Tabs styling */
-    .stTabs [data-testid="stTabItem"] {
-        background-color: var(--secondary-dark);
-        color: var(--text-light);
-        border-radius: 8px 8px 0 0;
-        padding: 10px 20px;
-        font-weight: 600;
-        border: 1px solid var(--border-color);
-        border-bottom: none;
-        margin-left: 5px; 
-    }
-    .stTabs [data-testid="stTabItem"][data-selected="true"] {
-        background-color: var(--accent-gold);
-        color: var(--primary-dark);
-        border-color: var(--accent-gold);
-        border-bottom: none;
-        box-shadow: 0 -2px 10px rgba(184, 134, 11, 0.5); /* ظل ذهبي خفيف */
     }
     
     /* رسائل التنبيهات */
@@ -282,10 +246,10 @@ st.markdown("""
         background-color: var(--secondary-dark);
         color: var(--text-light);
     }
-    .stAlert.success { border-left: 5px solid #00CC99; }
-    .stAlert.info { border-left: 5px solid var(--primary-blue); }
-    .stAlert.warning { border-left: 5px solid var(--accent-gold); }
-    .stAlert.error { border-left: 5px solid #DC3545; }
+    .stAlert.success { border-left: 5px solid #00CC99; } /* أخضر */
+    .stAlert.info { border-left: 5px solid var(--deep-gold); } /* ذهبي */
+    .stAlert.warning { border-left: 5px solid var(--accent-gold); } /* ذهبي لامع */
+    .stAlert.error { border-left: 5px solid #DC3545; } /* أحمر */
 
 
 </style>
@@ -312,43 +276,20 @@ if st.session_state['logged_in']:
     st.sidebar.markdown("### شعبة التدريب المتقدم")
     st.sidebar.markdown("---")
     
-    # 🚀 القائمة الجانبية المصححة (باستخدام الإيموجي) 🚀
+    # 🚀 القائمة الجانبية المصححة (باستخدام الإيموجي كنص لتجنب TypeError)
+    # هذا هو التعديل الأخير الذي يحل مشكلة TypeError
     menu = st.sidebar.radio(
         "القائمة الرئيسية:",
         (
-            "لوحة التحكم",
-            "إدارة الدورات",
-            "إدارة المدربين",
-            "التقارير والإحصائيات",
-            "التدقيق والمتابعة", 
-            "أدوات الإدارة المتقدمة"
+            "🖥️ لوحة التحكم",
+            "📖 إدارة الدورات",
+            "👨‍🏫 إدارة المدربين",
+            "📈 التقارير والإحصائيات",
+            "🔎 التدقيق والمتابعة", 
+            "🔒 أدوات الإدارة المتقدمة"
         ),
-        # استخدام الإيموجي المناسبة للمظهر الاحترافي
-        icons=[
-            "🖥️",           # لوحة التحكم - تقني
-            "📖",          # إدارة الدورات - كتاب
-            "👨‍🏫",          # إدارة المدربين - مدرب
-            "📈",    # التقارير - رسم بياني
-            "🔎",  # التدقيق - بحث وفحص
-            "🔒"       # الأدوات المتقدمة - قفل/أمان
-        ]
+        key="main_admin_menu"
     )
-    
-    # 🔥 تنسيق CSS إضافي لتلوين الأيقونات (يعمل الآن مع الإيموجي) 🔥
-    st.sidebar.markdown("""
-    <style>
-        /* ** مهم ** تلوين الأيقونات في القائمة الجانبية باللون الذهبي (مهم جداً مع الإيموجي) */
-        /* هذا التنسيق سيعمل على تلوين الأيقونات أو الإيموجي داخل زر الراديو */
-        .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2 span {
-            font-size: 1.2em;
-            margin-left: 10px;
-            filter: drop-shadow(0 0 1px #B8860B); /* ظل ذهبي خفيف للإيموجي */
-        }
-        .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2[aria-selected="true"] span {
-            filter: drop-shadow(0 0 1px #121212); /* ظل داكن للإيموجي عند الاختيار */
-        }
-    </style>
-    """, unsafe_allow_html=True)
 
     st.sidebar.markdown("---")
     st.sidebar.button("🔐 تسجيل الخروج", on_click=logout_user)
@@ -357,7 +298,7 @@ if st.session_state['logged_in']:
     # ==========================================
     # 1. لوحة التحكم (الصفحة الرئيسية الجديدة)
     # ==========================================
-    if menu == "لوحة التحكم":
+    if menu == "🖥️ لوحة التحكم":
         st.markdown(f"""
         <div class="logo-container">
             <img src="logo.jpg" class="logo-image-main">
@@ -392,7 +333,7 @@ if st.session_state['logged_in']:
             
             with chart_col:
                 # استخدام ألوان تناسب السمة الداكنة (ذهبي وأزرق)
-                st.bar_chart(college_counts, color=["#B8860B"]) 
+                st.bar_chart(college_counts, color=["#FFC300"]) # ذهبي لامع
             
             with data_col:
                 with st.expander("جدول البيانات التفصيلي"):
@@ -411,9 +352,9 @@ if st.session_state['logged_in']:
             st.info("لا توجد سجلات تدقيق لعرضها.")
 
     # ==========================================
-    # 2. قسم إدارة الدورات (تم إضافة تفقد المسجلين)
+    # 2. قسم إدارة الدورات 
     # ==========================================
-    elif menu == "إدارة الدورات":
+    elif menu == "📖 إدارة الدورات":
         st.header("📝 إدارة الدورات التدريبية")
         st.markdown("هذا القسم مخصص لإضافة وحذف الدورات المتاحة والتعديل على حالة التسجيل و **عرض قائمة المسجلين**.")
         
@@ -569,9 +510,9 @@ if st.session_state['logged_in']:
                 st.info("لا توجد دورات للحذف.")
 
     # ==========================================
-    # 3. قسم إدارة المدربين (القسم الجديد) 🧑‍🏫
+    # 3. قسم إدارة المدربين
     # ==========================================
-    elif menu == "إدارة المدربين":
+    elif menu == "👨‍🏫 إدارة المدربين":
         st.header("🧑‍🏫 إدارة ومتابعة المدربين")
         st.markdown("هذا القسم يعرض تفاصيل المدربين، الدورات المسندة إليهم، وقائمة المسجلين في كل دورة.")
 
@@ -634,7 +575,7 @@ if st.session_state['logged_in']:
     # ==========================================
     # 4. قسم التدقيق والمتابعة
     # ==========================================
-    elif menu == "التدقيق والمتابعة":
+    elif menu == "🔎 التدقيق والمتابعة":
         st.header("🔍 التدقيق اليومي للمرافق والبرامج")
         st.markdown("املأ هذا النموذج لرفع تقارير التدقيق الدورية.")
         
@@ -677,7 +618,7 @@ if st.session_state['logged_in']:
     # ==========================================
     # 5. التقارير والإحصائيات
     # ==========================================
-    elif menu == "التقارير والإحصائيات":
+    elif menu == "📈 التقارير والإحصائيات":
         st.header("📊 تقارير الأداء والبيانات")
         st.markdown("استعرض الإحصائيات الرئيسية وحمل تقارير البيانات.")
         
@@ -685,7 +626,7 @@ if st.session_state['logged_in']:
         if st.session_state['trainees']:
             df_trainees = pd.DataFrame(st.session_state['trainees']).T
             course_counts = df_trainees['Course_Name'].value_counts()
-            st.bar_chart(course_counts, color=["#0077CC"]) # لون أزرق
+            st.bar_chart(course_counts, color=["#FFC300"]) # لون ذهبي
             
         st.markdown("---")
         
@@ -722,7 +663,7 @@ if st.session_state['logged_in']:
     # ==========================================
     # 6. أدوات الإدارة المتقدمة
     # ==========================================
-    elif menu == "أدوات الإدارة المتقدمة":
+    elif menu == "🔒 أدوات الإدارة المتقدمة":
         st.title("🔑 أدوات الإدارة المتقدمة")
         st.error("تنبيه: هذا القسم يتيح حذف المتدربين وتقارير التدقيق. استخدمه بحذر شديد.")
         
@@ -859,7 +800,7 @@ else:
         
         with login_col2:
             st.markdown(f"""
-            <div style="margin-top: 30px; border-left: 3px solid {st.get_option("theme.primaryColor")}; padding-right: 15px;">
+            <div style="margin-top: 30px; border-left: 3px solid var(--deep-gold); padding-right: 15px;">
                 <p style="font-size: 1.1em; font-weight: bold; color: var(--accent-gold);">
                     مركز النمذجة والمحاكاة - جامعة آل البيت:
                 </p>
