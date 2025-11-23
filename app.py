@@ -71,7 +71,7 @@ st.set_page_config(
     page_icon="⚙️" 
 )
 
-# 💎 تصميم CSS الفاخر (Dark/Gold Theme - مستوحى من الشعار)
+# 💎 تصميم CSS الفاخر (Premium Dark Gold Theme)
 st.markdown("""
 <style>
     /* دعم الاتجاه من اليمين لليسار بشكل كامل */
@@ -81,16 +81,16 @@ st.markdown("""
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
-    /* الألوان الأساسية - سمة داكنة ذهبية (Dark Gold UI) */
+    /* الألوان الأساسية - سمة داكنة نحاسية (Premium Dark Gold) */
     :root {
-        --primary-dark: #121212;        /* خلفية أساسية داكنة جداً (أسود) */
-        --secondary-dark: #1F1F1F;      /* خلفية ثانوية (مثل البطاقات) */
-        --accent-gold: #FFC300;         /* لون ذهبي فاتح (للتأكيد والتمييز) */
-        --deep-gold: #B8860B;           /* لون ذهبي نحاسي (الرئيسي) - مستوحى من الشعار */
-        --text-light: #F0F0F0;          /* لون النص الفاتح */
+        --primary-dark: #1A1A1A;        /* خلفية أساسية داكنة جداً (رمادي غامق) */
+        --secondary-dark: #2C2C2C;      /* خلفية ثانوية (مثل البطاقات) */
+        --premium-gold: #CDA434;        /* لون ذهبي نحاسي متناسق (الرئيسي للتأكيد) */
+        --light-accent: #EFEFEF;        /* لون فاتح (مناسب للنص) */
+        --text-light: #E0E0E0;          /* لون النص الفاتح */
         --text-muted: #A0A0A0;          /* لون النص الثانوي */
-        --border-color: #333333;        /* لون الحدود الداكن */
-        --glass-bg: rgba(31, 31, 31, 0.9); /* خلفية زجاجية شفافة للشريط الجانبي */
+        --border-color: #444444;        /* لون الحدود الداكن */
+        --glass-bg: rgba(26, 26, 26, 0.95); /* خلفية زجاجية شفافة للشريط الجانبي */
     }
 
     body {
@@ -106,20 +106,20 @@ st.markdown("""
 
     /* العناوين والتأكيد */
     h1, h2, h3, h4 {
-        color: var(--accent-gold); /* العناوين باللون الذهبي اللامع */
+        color: var(--premium-gold); /* العناوين باللون الذهبي النحاسي */
         border-bottom: 1px solid var(--border-color);
         padding-bottom: 10px;
         margin-top: 30px;
         font-weight: 700; 
     }
-    h1 { font-size: 2.5em; color: var(--text-light); } /* العنوان الرئيسي بخط فاتح */
+    h1 { font-size: 2.5em; color: var(--light-accent); } /* العنوان الرئيسي بخط فاتح */
     h2 { font-size: 2em; }
     h3 { font-size: 1.7em; }
 
-    /* الشريط الجانبي (تأثير Glassmorphism) */
+    /* الشريط الجانبي وتنسيق القائمة */
     [data-testid="stSidebar"] {
         background-color: var(--glass-bg);
-        backdrop-filter: blur(10px); 
+        backdrop-filter: blur(8px); 
         border-right: 1px solid var(--border-color);
         box-shadow: 2px 0 20px rgba(0, 0, 0, 0.5); 
         min-width: 300px !important;
@@ -127,75 +127,61 @@ st.markdown("""
     }
     /* تنسيق خيارات الراديو (القائمة الجانبية) */
     .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2 { 
-        font-size: 1.15em;
-        font-weight: 600;
+        font-size: 1.1em;
+        font-weight: 500;
         color: var(--text-light);
         padding: 12px 15px;
         border-radius: 8px;
-        transition: background-color 0.2s ease, border 0.2s ease;
-        border-left: 3px solid transparent; 
+        transition: background-color 0.2s ease;
     }
     .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2:hover {
-        background-color: rgba(184, 134, 11, 0.1); /* ظل خفيف من الذهبي */
-        border-left: 3px solid var(--accent-gold); /* خط ذهبي عند التحويم */
-        color: var(--accent-gold);
+        background-color: rgba(205, 164, 52, 0.1); /* ظل خفيف من الذهبي */
+        color: var(--premium-gold);
     }
     .st-emotion-cache-c3y0s5 .st-emotion-cache-1jmpsc2[aria-selected="true"] {
-        background-color: var(--deep-gold); /* الخلفية باللون الذهبي الداكن عند الاختيار */
-        color: var(--primary-dark);
-        border-left: 3px solid var(--primary-dark); 
-        box-shadow: none;
+        background-color: var(--premium-gold); /* الخلفية باللون الذهبي النحاسي عند الاختيار */
+        color: var(--primary-dark); /* نص داكن على خلفية ذهبية */
+        font-weight: 700;
     }
 
-    /* الأزرار (Primary Action) - تأثير ذهبي متدرج */
+    /* الأزرار (Primary Action) - تأثير معدني هادئ */
     .stButton>button {
-        background: linear-gradient(145deg, var(--accent-gold), var(--deep-gold));
-        color: var(--primary-dark); /* نص داكن على خلفية ذهبية */
-        border: 1px solid var(--text-light);
+        background: var(--premium-gold);
+        color: var(--primary-dark); 
+        border: 1px solid var(--light-accent);
         border-radius: 8px;
-        padding: 12px 25px;
+        padding: 10px 20px;
         font-weight: 700;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         transition: all 0.3s ease;
         font-size: 1.0em;
         margin-top: 10px;
     }
     .stButton>button:hover {
-        background: linear-gradient(145deg, #FFD700, #B8860B); 
+        background: #DDC873; /* درجة أفتح قليلاً عند التحويم */
         color: var(--primary-dark);
         transform: scale(1.02);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
     }
     
-    /* بطاقات الإحصائيات (Metrics) - تصميم ذهبي */
+    /* بطاقات الإحصائيات (Metrics) */
     [data-testid="stMetric"] {
         background-color: var(--secondary-dark);
-        border: 1px solid var(--deep-gold); /* إطار ذهبي داكن */
+        border: 1px solid var(--border-color);
         border-radius: 12px;
-        padding: 25px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-        text-align: center;
-        transition: transform 0.3s ease;
-        border-bottom: 3px solid var(--accent-gold); /* شريط ذهبي لامع سفلي */
-    }
-    [data-testid="stMetric"]:hover {
-        transform: translateY(-5px); 
-        border-bottom: 3px solid var(--deep-gold); 
+        padding: 20px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.4);
+        border-bottom: 3px solid var(--premium-gold); 
     }
     [data-testid="stMetricValue"] {
-        font-size: 3.5em; 
-        color: var(--accent-gold); /* القيمة باللون الذهبي اللامع */
+        font-size: 3.0em; 
+        color: var(--premium-gold); /* القيمة باللون الذهبي النحاسي */
         font-weight: bolder;
-        margin-bottom: 5px;
     }
     [data-testid="stMetricLabel"] {
-        font-size: 1.1em;
+        font-size: 1.0em;
         color: var(--text-light);
         font-weight: 500;
-    }
-    [data-testid="stMetricDelta"] {
-        font-size: 0.9em;
-        font-weight: bold;
-        color: #00CC99; /* لون أخضر للزيادة */
     }
 
     /* تنسيق خاص للشعارين */
@@ -206,50 +192,47 @@ st.markdown("""
     }
     .logo-image-sidebar {
         width: 130px; 
-        filter: drop-shadow(0 0 5px rgba(255, 195, 0, 0.5)); /* ظل ذهبي خفيف */
+        filter: drop-shadow(0 0 5px rgba(205, 164, 52, 0.5)); 
         border-radius: 8px;
     }
     .logo-image-main {
         width: 250px;
-        filter: drop-shadow(0 0 10px rgba(255, 195, 0, 0.7));
+        filter: drop-shadow(0 0 10px rgba(205, 164, 52, 0.7));
         border-radius: 12px;
         margin-bottom: 40px; 
     }
     
-    /* تحسين تصميم النماذج والجداول */
+    /* تحسين تصميم النماذج والحقول والجداول */
     .st-emotion-cache-czk5ad { 
         background-color: var(--secondary-dark);
         border-radius: 10px;
         padding: 20px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        margin-bottom: 20px;
         border: 1px solid var(--border-color);
     }
     .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea>div>div>textarea {
         border-radius: 8px;
-        border: 1px solid var(--deep-gold); /* إطار ذهبي للحقول */
+        border: 1px solid var(--premium-gold); 
         background-color: var(--primary-dark);
         color: var(--text-light);
         padding: 10px;
     }
     .st-emotion-cache-1ftrzg7 p { 
         font-weight: 700;
-        color: var(--accent-gold);
+        color: var(--premium-gold);
         font-size: 1.1em;
     }
     
-    /* رسائل التنبيهات */
-    .stAlert {
-        border-radius: 8px;
-        font-weight: 500;
-        padding: 15px 20px;
+    /* تنسيق التابات */
+    .stTabs [data-testid="stTabItem"] {
         background-color: var(--secondary-dark);
-        color: var(--text-light);
+        color: var(--text-muted);
+        border: 1px solid var(--border-color);
     }
-    .stAlert.success { border-left: 5px solid #00CC99; } /* أخضر */
-    .stAlert.info { border-left: 5px solid var(--deep-gold); } /* ذهبي */
-    .stAlert.warning { border-left: 5px solid var(--accent-gold); } /* ذهبي لامع */
-    .stAlert.error { border-left: 5px solid #DC3545; } /* أحمر */
+    .stTabs [data-testid="stTabItem"][data-selected="true"] {
+        background-color: var(--premium-gold);
+        color: var(--primary-dark);
+        border-color: var(--premium-gold);
+    }
 
 
 </style>
@@ -268,7 +251,7 @@ if st.session_state['logged_in']:
     # --- القائمة الجانبية للتنقل (تظهر فقط بعد الدخول) ---
     st.sidebar.markdown(f"""
     <div class="logo-container">
-        <img src="download-removebg-preview (1).png" class="logo-image-sidebar">
+        
     </div>
     """, unsafe_allow_html=True)
     
@@ -276,8 +259,7 @@ if st.session_state['logged_in']:
     st.sidebar.markdown("### شعبة التدريب المتقدم")
     st.sidebar.markdown("---")
     
-    # 🚀 القائمة الجانبية المصححة (باستخدام الإيموجي كنص لتجنب TypeError)
-    # هذا هو التعديل الأخير الذي يحل مشكلة TypeError
+    # 🚀 القائمة الجانبية المصححة (تجنب خطأ TypeError عن طريق دمج الإيموجي في النص)
     menu = st.sidebar.radio(
         "القائمة الرئيسية:",
         (
@@ -301,7 +283,10 @@ if st.session_state['logged_in']:
     if menu == "🖥️ لوحة التحكم":
         st.markdown(f"""
         <div class="logo-container">
-            <img src="logo.jpg" class="logo-image-main">
+            
+
+[Image of logo.jpg]
+
         </div>
         """, unsafe_allow_html=True)
         
@@ -332,8 +317,8 @@ if st.session_state['logged_in']:
             college_counts = df_trainees['College'].value_counts()
             
             with chart_col:
-                # استخدام ألوان تناسب السمة الداكنة (ذهبي وأزرق)
-                st.bar_chart(college_counts, color=["#FFC300"]) # ذهبي لامع
+                # استخدام ألوان تناسب السمة الداكنة (ذهبي نحاسي)
+                st.bar_chart(college_counts, color=["#CDA434"]) 
             
             with data_col:
                 with st.expander("جدول البيانات التفصيلي"):
@@ -626,7 +611,7 @@ if st.session_state['logged_in']:
         if st.session_state['trainees']:
             df_trainees = pd.DataFrame(st.session_state['trainees']).T
             course_counts = df_trainees['Course_Name'].value_counts()
-            st.bar_chart(course_counts, color=["#FFC300"]) # لون ذهبي
+            st.bar_chart(course_counts, color=["#CDA434"]) # لون ذهبي نحاسي
             
         st.markdown("---")
         
@@ -800,8 +785,8 @@ else:
         
         with login_col2:
             st.markdown(f"""
-            <div style="margin-top: 30px; border-left: 3px solid var(--deep-gold); padding-right: 15px;">
-                <p style="font-size: 1.1em; font-weight: bold; color: var(--accent-gold);">
+            <div style="margin-top: 30px; border-left: 3px solid var(--premium-gold); padding-right: 15px;">
+                <p style="font-size: 1.1em; font-weight: bold; color: var(--premium-gold);">
                     مركز النمذجة والمحاكاة - جامعة آل البيت:
                 </p>
                 <p style="color: var(--text-muted);">
