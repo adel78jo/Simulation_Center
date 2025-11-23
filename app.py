@@ -175,6 +175,7 @@ if st.session_state['logged_in']:
     
     # --- القائمة الجانبية للتنقل (تظهر فقط بعد الدخول) ---
     # 🌟 استخدام HTML لتضمين الشعار الأول (aabu_logo.png)
+    # *تأكد من وجود ملف aabu_logo.png في نفس مجلد app.py*
     st.sidebar.markdown(f"""
     <div class="logo-container">
         <img src="aabu_logo.png" class="logo-image-sidebar">
@@ -199,6 +200,7 @@ if st.session_state['logged_in']:
     # ==========================================
     if menu == "🏠 لوحة التحكم":
         # 🌟 استخدام HTML لتضمين الشعار الثاني (simulation_logo.jpg)
+        # *تأكد من وجود ملف simulation_logo.jpg في نفس مجلد app.py*
         st.markdown(f"""
         <div class="logo-container">
             <img src="simulation_logo.jpg" class="logo-image-main">
@@ -508,26 +510,81 @@ if st.session_state['logged_in']:
 
 else:
     # ---------------------------------------------
-    # شاشة تسجيل الدخول (إذا لم يتم تسجيل الدخول) - آمنة
+    # شاشة تسجيل الدخول والصفحة العامة (Public View)
     # ---------------------------------------------
-    st.title("🔐 بوابة الوصول المقيد")
-    st.subheader("الوصول إلى لوحة التحكم يقتصر على مديري النظام المصرح لهم فقط.")
+    st.title("مركز النمذجة والمحاكاة بجامعة آل البيت")
+    st.subheader("تسجيل المتدربين ودخول نظام الإدارة")
     
-    st.sidebar.info("الرجاء تسجيل الدخول للمتابعة.")
-
-    login_col1, login_col2 = st.columns([1, 1]) 
+    # قائمة الدورات المتاحة للتسجيل
+    available_courses = {k: v for k, v in st.session_state['courses'].items() if v['Status'] == 'متاحة للتسجيل'}
+    course_options = {f"#{k} - {v['Name']}": k for k, v in available_courses.items()}
     
-    with login_col1:
-        with st.form("login_form"):
-            username = st.text_input("اسم المستخدم")
-            password = st.text_input("كلمة المرور", type="password")
+    # تقسيم الصفحة إلى تسجيل دخول المدير وتسجيل المتدرب
+    tab_login, tab_register = st.tabs(["🔑 دخول المدير", "📝 تسجيل في دورة"])
+    
+    # ------------------
+    # 1. علامة تبويب دخول المدير
+    # ------------------
+    with tab_login:
+        st.info("الوصول إلى لوحة التحكم يقتصر على مديري النظام المصرح لهم فقط.")
+        
+        login_col1, login_col2 = st.columns([1, 1]) 
+        
+        with login_col1:
+            with st.form("login_form"):
+                username = st.text_input("اسم المستخدم")
+                password = st.text_input("كلمة المرور", type="password")
+                
+                if st.form_submit_button("🔑 تسجيل الدخول"):
+                    login_user(username, password)
+        
+        with login_col2:
+            st.markdown("""
+            <div style="margin-top: 30px;">
+                <p style="font-size: 1.1em; font-weight: bold; color: #008000;">
+                    مركز النمذجة والمحاكاة - جامعة آل البيت:
+                </p>
+                <p>
+                    نحن ملتزمون بتوفير بيئة تدريب وتطوير عالية الجودة في مجالات النمذجة والمحاكاة والواقع الافتراضي.
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
             
-            if st.form_submit_button("🔑 تسجيل الدخول"):
-                login_user(username, password)
-    
-    with login_col2:
-        # رسالة توجيهية عامة ومحايدة
-        st.info("""
-        **مركز النمذجة والمحاكاة - جامعة آل البيت:**
-        نحن ملتزمون بتوفير بيئة تدريب وتطوير عالية الجودة.
-        """)
+    # ------------------
+    # 2. علامة تبويب تسجيل المتدرب
+    # ------------------
+    with tab_register:
+        st.header("التسجيل في الدورات التدريبية المتاحة")
+        st.markdown("يرجى ملء النموذج أدناه للتسجيل في إحدى الدورات التي يتم قبول طلبات التسجيل فيها حالياً.")
+        
+        if not available_courses:
+            st.warning("⚠️ لا توجد دورات متاحة للتسجيل حالياً. يرجى مراجعة الموقع لاحقاً.")
+        else:
+            with st.form("trainee_registration_form", clear_on_submit=True):
+                t_name = st.text_input("الاسم الرباعي الكامل (كما في الوثائق الرسمية)")
+                t_type = st.selectbox("النوع / الصفة", ["طالب بكالوريوس", "طالب دراسات عليا", "موظف جامعة", "خريج", "من خارج الجامعة"])
+                t_college = st.selectbox("الكلية / الجهة المنتمي إليها", ["تكنولوجيا المعلومات", "الهندسة", "العلوم", "العلوم الإدارية", "الآداب", "أخرى"])
+                
+                selected_course_key = st.selectbox("اختر الدورة للتسجيل", options=list(course_options.keys()))
+                
+                register_button = st.form_submit_button("✅ إرسال طلب التسجيل")
+                
+                if register_button:
+                    if t_name and selected_course_key:
+                        course_id_selected = course_options[selected_course_key]
+                        course_name_selected = available_courses[course_id_selected]['Name']
+                        
+                        # إنشاء إدخال المتدرب الجديد
+                        new_trainee_id = get_next_id(st.session_state['trainees'])
+                        st.session_state['trainees'][new_trainee_id] = {
+                            "Name": t_name,
+                            "Type": t_type,
+                            "College": t_college,
+                            "Course_ID": course_id_selected,
+                            "Course_Name": course_name_selected,
+                            "Date": datetime.now().strftime("%Y-%m-%d")
+                        }
+                        
+                        st.success(f"🎉 تم تسجيلك بنجاح في دورة **{course_name_selected}**! سيتم التواصل معك قريباً لتأكيد موعد الدورة.")
+                    else:
+                        st.error("الرجاء تعبئة جميع الحقول المطلوبة (الاسم واختيار الدورة).")
