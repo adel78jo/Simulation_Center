@@ -300,7 +300,7 @@ if st.session_state['logged_in']:
     # --- القائمة الجانبية للتنقل (تظهر فقط بعد الدخول) ---
     st.sidebar.markdown(f"""
     <div class="logo-container">
-        <img src="aabu_logo.png" class="logo-image-sidebar">
+        <img src="download-removebg-preview (1).png" class="logo-image-sidebar">
     </div>
     """, unsafe_allow_html=True)
     
@@ -308,7 +308,7 @@ if st.session_state['logged_in']:
     st.sidebar.markdown("### شعبة التدريب والتطوير")
     st.sidebar.markdown("---")
     
-    # تحديد القائمة (مع أيقونات جديدة)
+    # تحديد القائمة (مع أيقونات إيموجي فقط لتجنب الخطأ)
     menu = st.sidebar.radio(
         "القائمة الرئيسية:",
         (
@@ -318,8 +318,8 @@ if st.session_state['logged_in']:
             "📊 التقارير والإحصائيات",
             "🔍 التدقيق والمتابعة", 
             "🔑 أدوات الإدارة المتقدمة"
-        ),
-        icons=["house", "book", "person-badge", "bar-chart", "search", "key"] # أيقونات Bootstrap
+        )
+        # 💡 تم حذف خاصية icons لتجنب TypeError
     )
     st.sidebar.markdown("---")
     st.sidebar.button("🔐 تسجيل الخروج", on_click=logout_user)
@@ -331,7 +331,7 @@ if st.session_state['logged_in']:
     if menu == "🏠 لوحة التحكم":
         st.markdown(f"""
         <div class="logo-container">
-            <img src="simulation_logo.jpg" class="logo-image-main">
+            <img src="logo.jpg" class="logo-image-main">
         </div>
         """, unsafe_allow_html=True)
         
@@ -562,16 +562,12 @@ if st.session_state['logged_in']:
             
             st.subheader("تفقد قائمة المسجلين لكل مدرب")
             
-            trainer_options_keys = [f"#{id} - {data['Name']} ({data['Specialty']})" for id, data in st.session_state['trainers'].items()]
-            trainer_options_values = list(st.session_state['trainers'].keys())
+            trainer_options_keys = [f"#{id} - {data['Name']} ({data['Specialty']})": id for id, data in st.session_state['trainers'].items()]
             
-            # إنشاء قاموس عكسي للوصول إلى الـ ID
-            trainer_key_to_id = {key: id for key, id in zip(trainer_options_keys, trainer_options_values)}
-
             if trainer_options_keys:
-                selected_trainer_key = st.selectbox("اختر المدرب لعرض تفاصيل دوره:", options=trainer_options_keys, key="select_trainer_for_view")
+                selected_trainer_key_name = st.selectbox("اختر المدرب لعرض تفاصيل دوره:", options=list(trainer_options_keys.keys()), key="select_trainer_for_view")
                 
-                trainer_id = trainer_key_to_id[selected_trainer_key]
+                trainer_id = trainer_options_keys[selected_trainer_key_name]
                 assigned_course_id = st.session_state['trainers'][trainer_id]['Assigned_Course_ID']
                 trainer_name = st.session_state['trainers'][trainer_id]['Name']
                 
@@ -658,7 +654,7 @@ if st.session_state['logged_in']:
         if st.session_state['trainees']:
             df_trainees = pd.DataFrame(st.session_state['trainees']).T
             course_counts = df_trainees['Course_Name'].value_counts()
-            st.bar_chart(course_counts, color="#FFD700") 
+            st.bar_chart(course_counts, color="#007bff") 
             
         st.markdown("---")
         
