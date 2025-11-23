@@ -204,6 +204,26 @@ st.markdown("""
     .stAlert.error { background-color: #ffe6e6; color: #cc0000; } /* أحمر خطأ */
     .stAlert.warning { background-color: #fffacd; color: #a38c00; } /* أصفر تحذير */
     .stAlert.info { background-color: #e0f2f7; color: #006064; } /* أزرق معلومات */
+    
+    /* تنسيق خاص للشعارين باستخدام HTML */
+    .logo-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .logo-image-sidebar {
+        width: 120px;
+        height: auto;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    .logo-image-main {
+        width: 200px;
+        height: auto;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+    }
 
 </style>
 """, unsafe_allow_html=True)
@@ -219,8 +239,13 @@ if st.session_state['logged_in']:
     # ---------------------------------------------
     
     # --- القائمة الجانبية للتنقل (تظهر فقط بعد الدخول) ---
-    # 🌟 تم التحديث لضمان ظهور الشعار
-    st.sidebar.image("https://i.ibb.co/6P8cT6v/aabu-logo-sidebar.png", width=120) 
+    # 🌟 استخدام HTML لتضمين الشعار الأول
+    st.sidebar.markdown(f"""
+    <div class="logo-container">
+        <img src="download-removebg-preview (1).png" class="logo-image-sidebar">
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.sidebar.markdown("## شعبة التدريب والتطوير")
     st.sidebar.markdown("### مركز النمذجة والمحاكاة")
     st.sidebar.markdown("---")
@@ -238,8 +263,13 @@ if st.session_state['logged_in']:
     # 1. لوحة التحكم (الصفحة الرئيسية الجديدة)
     # ==========================================
     if menu == "🏠 لوحة التحكم":
-        # 🌟 تم التحديث لضمان ظهور الشعار
-        st.image("https://i.ibb.co/311v97x/simulation-center-logo.jpg", width=200) 
+        # 🌟 استخدام HTML لتضمين الشعار الثاني
+        st.markdown(f"""
+        <div class="logo-container">
+            <img src="logo.jpg" class="logo-image-main">
+        </div>
+        """, unsafe_allow_html=True)
+        
         st.title("لوحة التحكم الرئيسية للمركز")
         st.subheader("مرحباً بك، مدير النظام. ملخص بيانات شعبة التدريب")
         
