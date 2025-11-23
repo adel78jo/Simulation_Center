@@ -234,7 +234,7 @@ if st.session_state['logged_in']:
         (
             "🖥️ لوحة التحكم",
             "📖 إدارة الدورات والمواعيد",         
-            "👨‍🏫 إدارة المدربين",
+            "👨‍🏫 إدارة المدربين", # هذا القسم سيتم تعديله
             "👥 إدارة المتدربين المسجلين",        
             "📈 التقارير والإحصائيات والطباعة",  
             "🔎 التدقيق والمتابعة" 
@@ -295,8 +295,7 @@ if st.session_state['logged_in']:
             st.info("لا توجد بيانات متدربين لعرضها حالياً.")
 
     # ==========================================
-    # 2. قسم إدارة الدورات والمواعيد (صلاحية التعديل الكاملة)
-    # 🛑 تم تأمين هذا القسم باستخدام reindex لحل آخر KeyError 🛑
+    # 2. قسم إدارة الدورات والمواعيد 
     # ==========================================
     elif menu == "📖 إدارة الدورات والمواعيد":
         st.header("📝 إدارة الدورات والمواعيد والمواقع")
@@ -357,6 +356,7 @@ if st.session_state['logged_in']:
                         }
                         
                         if trainer_id_to_assign is not None:
+                            # تحديث حالة المدرب
                             st.session_state['trainers'][trainer_id_to_assign]['Assigned_Course_ID'] = new_id
                         
                         st.success(f"✅ تمت إضافة الدورة **{new_name}** بالموعد {new_date} والموقع **{new_location}**.")
@@ -390,9 +390,10 @@ if st.session_state['logged_in']:
                     if st.form_submit_button("حفظ التعديلات"):
                         updated_trainer_id = next((k for k, v in trainer_list.items() if v == updated_trainer_name), None)
 
-                        # تحديث إسناد المدربين
+                        # تحديث إسناد المدربين (إلغاء الإسناد القديم وتعيين الجديد)
                         if current_trainer_id and current_trainer_id != updated_trainer_id and current_trainer_id in st.session_state['trainers']:
-                            st.session_state['trainers'][current_trainer_id]['Assigned_Course_ID'] = None
+                            if st.session_state['trainers'][current_trainer_id]['Assigned_Course_ID'] == course_to_update:
+                                st.session_state['trainers'][current_trainer_id]['Assigned_Course_ID'] = None
                         if updated_trainer_id:
                             st.session_state['trainers'][updated_trainer_id]['Assigned_Course_ID'] = course_to_update
                         
@@ -418,7 +419,9 @@ if st.session_state['logged_in']:
                     trainer_id = st.session_state['courses'][course_to_delete].get('Trainer_ID')
 
                     if trainer_id and trainer_id in st.session_state['trainers']:
-                         st.session_state['trainers'][trainer_id]['Assigned_Course_ID'] = None
+                         # التأكد من إلغاء الإسناد من المدرب
+                         if st.session_state['trainers'][trainer_id]['Assigned_Course_ID'] == course_to_delete:
+                             st.session_state['trainers'][trainer_id]['Assigned_Course_ID'] = None
                          
                     if delete_item(st.session_state['courses'], course_to_delete):
                         st.success(f"🗑️ تم حذف الدورة **{deleted_name}** نهائياً.")
@@ -427,14 +430,13 @@ if st.session_state['logged_in']:
                 st.info("لا توجد دورات للحذف.")
 
     # ==========================================
-    # 3. قسم إدارة المدربين
-    # 🛑 تم تأمين هذا القسم باستخدام reindex 🛑
+    # 3. قسم إدارة المدربين (تمت إضافة صلاحية التعديل الكاملة هنا)
     # ==========================================
     elif menu == "👨‍🏫 إدارة المدربين":
-        st.header("🧑‍🏫 إدارة ومتابعة المدربين")
-        st.markdown("هذا القسم يعرض تفاصيل المدربين، الدورات المسندة إليهم، وقائمة المسجلين في كل دورة.")
-
-        # تجهيز البيانات للعرض
+        st.header("🧑‍🏫 إدارة شاملة لبيانات المدربين")
+        st.markdown("إضافة، تعديل، وحذف المدربين، بالإضافة إلى عرض تفاصيل الدورات المسندة.")
+        
+        # قائمة المدربين الحالية
         if st.session_state['trainers']:
             df_trainers = pd.DataFrame(st.session_state['trainers']).T
             
@@ -444,21 +446,113 @@ if st.session_state['logged_in']:
                 course_names = {}
                 
             df_trainers['Assigned_Course_Name'] = df_trainers['Assigned_Course_ID'].apply(lambda x: course_names.get(x, 'غير مسند'))
-            
             df_trainers['Trainer_ID'] = df_trainers.index
             
             st.subheader("قائمة المدربين وحالة الإسناد")
             
-            # 🛡️ تأمين الأعمدة لعرض المدربين
             required_trainer_cols = ['Trainer_ID', 'Name', 'Specialty', 'Assigned_Course_Name']
             df_trainers_display = df_trainers.reindex(columns=required_trainer_cols)
             
             st.dataframe(df_trainers_display, use_container_width=True, hide_index=True)
+            trainer_ids = list(st.session_state['trainers'].keys())
+        else:
+            st.info("لا يوجد مدربون مضافون في النظام.")
+            trainer_ids = []
 
-            st.markdown("---")
-            
-            st.subheader("تفقد قائمة المسجلين لكل مدرب")
-            
+        st.markdown("---")
+        st.subheader("تحكم في المدربين (إضافة، تعديل، حذف)")
+
+        col_t_crud1, col_t_crud2, col_t_crud3 = st.columns(3)
+        
+        # --- إضافة مدرب جديد ---
+        with col_t_crud1.expander("➕ إضافة مدرب جديد"):
+            with st.form("add_trainer_form", clear_on_submit=True):
+                new_trainer_name = st.text_input("اسم المدرب الكامل")
+                new_trainer_specialty = st.text_input("تخصص المدرب")
+                
+                if st.form_submit_button("حفظ المدرب"):
+                    if new_trainer_name and new_trainer_specialty:
+                        new_id = get_next_id(st.session_state['trainers'])
+                        st.session_state['trainers'][new_id] = {
+                            "Name": new_trainer_name,
+                            "Specialty": new_trainer_specialty,
+                            "Assigned_Course_ID": None
+                        }
+                        st.success(f"✅ تمت إضافة المدرب **{new_trainer_name}** بنجاح برقم ID: {new_id}.")
+                        st.rerun()
+                    else:
+                        st.error("الرجاء إدخال اسم المدرب وتخصصه.")
+                        
+        # --- تعديل بيانات مدرب ---
+        with col_t_crud2.expander("✍️ تعديل بيانات مدرب"):
+            if trainer_ids:
+                trainer_to_update = st.selectbox("اختر المدرب للتعديل", options=trainer_ids, format_func=lambda x: f"#{x} - {st.session_state['trainers'][x]['Name']}", key="update_trainer_select")
+                current_data = st.session_state['trainers'][trainer_to_update]
+                
+                # إعداد قائمة الدورات لإسنادها
+                course_list_update = {k: v['Name'] for k, v in st.session_state['courses'].items()}
+                course_options_update = ['غير مسند'] + list(course_list_update.values())
+                
+                current_assigned_course_id = current_data.get('Assigned_Course_ID')
+                default_course_name = course_list_update.get(current_assigned_course_id, "غير مسند")
+                
+                with st.form("update_trainer_form"):
+                    updated_name = st.text_input("الاسم الجديد", value=current_data['Name'])
+                    updated_specialty = st.text_input("التخصص الجديد", value=current_data['Specialty'])
+                    
+                    selected_course_name_update = st.selectbox("تغيير الدورة المسندة", options=course_options_update, index=course_options_update.index(default_course_name), key="course_assign_update")
+                    
+                    if st.form_submit_button("حفظ التعديلات للمدرب"):
+                        # تحديد ID الدورة الجديدة
+                        updated_course_id = next((k for k, v in course_list_update.items() if v == selected_course_name_update), None)
+
+                        # تحديث الإسناد القديم في قائمة الدورات (إذا كان هناك تغيير)
+                        if current_assigned_course_id and current_assigned_course_id in st.session_state['courses']:
+                            if st.session_state['courses'][current_assigned_course_id].get('Trainer_ID') == trainer_to_update:
+                                st.session_state['courses'][current_assigned_course_id]['Trainer_ID'] = None
+
+                        # تحديث الإسناد الجديد في قائمة الدورات (إذا تم إسناد دورة جديدة)
+                        if updated_course_id:
+                            st.session_state['courses'][updated_course_id]['Trainer_ID'] = trainer_to_update
+
+                        # تحديث بيانات المدرب
+                        st.session_state['trainers'][trainer_to_update].update({
+                            "Name": updated_name,
+                            "Specialty": updated_specialty,
+                            "Assigned_Course_ID": updated_course_id
+                        })
+                        
+                        st.success(f"✅ تم تعديل بيانات المدرب **{updated_name}** بنجاح.")
+                        st.rerun()
+            else:
+                st.info("لا يوجد مدربون للتعديل.")
+        
+        # --- حذف مدرب ---
+        with col_t_crud3.expander("🗑️ حذف مدرب"):
+            if trainer_ids:
+                trainer_to_delete = st.selectbox("اختر المدرب للحذف", options=trainer_ids, format_func=lambda x: f"#{x} - {st.session_state['trainers'][x]['Name']}", key="delete_trainer_select")
+                
+                if st.button("تأكيد حذف المدرب", key="delete_trainer_btn"):
+                    deleted_name = st.session_state['trainers'][trainer_to_delete]['Name']
+                    assigned_course_id = st.session_state['trainers'][trainer_to_delete].get('Assigned_Course_ID')
+
+                    # إلغاء إسناد الدورة قبل الحذف
+                    if assigned_course_id and assigned_course_id in st.session_state['courses']:
+                        st.session_state['courses'][assigned_course_id]['Trainer_ID'] = None
+                         
+                    if delete_item(st.session_state['trainers'], trainer_to_delete):
+                        st.success(f"🗑️ تم حذف المدرب **{deleted_name}** نهائياً وإلغاء إسناد أي دورات له.")
+                        st.rerun()
+            else:
+                st.info("لا يوجد مدربون للحذف.")
+                
+        # --- متابعة تفقد المسجلين لكل مدرب (الجزء الأصلي) ---
+        st.markdown("---")
+        st.subheader("تفقد قائمة المسجلين لكل مدرب")
+        
+        # ... (باقي الكود الأصلي لمتابعة تفقد المسجلين لكل مدرب كما هو) ...
+
+        if st.session_state['trainers']:
             trainer_options_keys = {f"#{id} - {data['Name']} ({data['Specialty']})": id for id, data in st.session_state['trainers'].items()}
             
             if trainer_options_keys:
@@ -480,7 +574,6 @@ if st.session_state['logged_in']:
                             df_trainees_trainer['Trainee_ID'] = df_trainees_trainer.index
                             st.info(f"عدد المسجلين في دورة **{course_name}**: {len(df_trainees_trainer)} متدرب.")
                             
-                            # 🛡️ تأمين الأعمدة لعرض المتدربين المسجلين في دورة المدرب
                             required_trainee_cols = ['Trainee_ID', 'Name', 'College', 'Type', 'National_ID']
                             df_trainees_trainer_display = df_trainees_trainer.reindex(columns=required_trainee_cols)
                             
@@ -502,7 +595,6 @@ if st.session_state['logged_in']:
     
     # ==========================================
     # 4. قسم إدارة المتدربين المسجلين
-    # 🛑 تم تأمين هذا القسم باستخدام reindex 🛑
     # ==========================================
     elif menu == "👥 إدارة المتدربين المسجلين":
         st.header("👥 إدارة وتعديل بيانات المتدربين")
@@ -513,7 +605,6 @@ if st.session_state['logged_in']:
             df_trainees = pd.DataFrame(st.session_state['trainees']).T
             df_trainees['ID'] = df_trainees.index
             
-            # 🛡️ تأمين الأعمدة لعرض المتدربين
             required_trainees_view_cols = ['ID', 'Name', 'National_ID', 'College', 'Course_Name', 'Date']
             df_trainees_display = df_trainees.reindex(columns=required_trainees_view_cols)
             
